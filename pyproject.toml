@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hackermining"
+version = "0.1.0"
+description = "20 years of Hacker News — data mining investigative analysis"
+requires-python = ">=3.11"
+dependencies = [
+    "google-cloud-bigquery>=3.25",
+    "pandas-gbq>=0.24",
+    "duckdb>=1.1",
+    "pandas>=2.2",
+    "polars>=1.12",
+    "pyarrow>=18",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+    "plotly>=5.24",
+    "vaderSentiment>=3.3",
+    "jupyter>=1.1",
+    "nbconvert>=7.16",
+    "tqdm>=4.67",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+nlp = [
+    "bertopic>=0.16",
+    "sentence-transformers>=3.3",
+]
+dev = [
+    "ruff>=0.8",
+    "pytest>=8",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

@@ -1,0 +1,33 @@
+# Data (too large to commit)
+data/*.parquet
+data/*.csv
+data/*.json
+data/*.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert/
+
+# Quarto output
+/_site/
+/.quarto/
+*_files/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
