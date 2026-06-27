@@ -1,0 +1,275 @@
+[
+  {
+    "objectID": "notebooks/04_domain_dominance.html",
+    "href": "notebooks/04_domain_dominance.html",
+    "title": "04 · Domain Dominance",
+    "section": "",
+    "text": "Who owns HN’s front page? We track which domains (news sites, platforms, personal blogs) dominated each era — and how the ecosystem has shifted from individual blogs to corporate publishing platforms and back to newsletters.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\nimport matplotlib.cm as cm\nimport numpy as np\nfrom src.loader import db\nfrom src.nlp import extract_domain\nfrom src.viz import set_style, save\n\nset_style()\ncon = db()\nShow code\nstories = con.execute(\"\"\"\n    SELECT url, score, YEAR(posted_at) AS year\n    FROM stories\n    WHERE url IS NOT NULL\n      AND score &gt;= 10\n      AND YEAR(posted_at) BETWEEN 2008 AND 2024\n\"\"\").df()\n\nstories['domain'] = stories['url'].apply(extract_domain)\nprint(f'{len(stories):,} stories with URLs')"
+  },
+  {
+    "objectID": "notebooks/04_domain_dominance.html#top-domains-overall",
+    "href": "notebooks/04_domain_dominance.html#top-domains-overall",
+    "title": "04 · Domain Dominance",
+    "section": "Top domains overall",
+    "text": "Top domains overall\n\n\nShow code\ntop_domains = (\n    stories.groupby('domain')\n    .agg(n_stories=('score', 'count'), avg_score=('score', 'mean'))\n    .sort_values('n_stories', ascending=False)\n    .head(30)\n)\ndisplay(top_domains)"
+  },
+  {
+    "objectID": "notebooks/04_domain_dominance.html#domain-share-over-time-top-10-platforms",
+    "href": "notebooks/04_domain_dominance.html#domain-share-over-time-top-10-platforms",
+    "title": "04 · Domain Dominance",
+    "section": "Domain share over time (top 10 platforms)",
+    "text": "Domain share over time (top 10 platforms)\n\n\nShow code\nTRACKED = [\n    'github.com', 'medium.com', 'nytimes.com', 'techcrunch.com',\n    'arstechnica.com', 'substack.com', 'wired.com', 'bloomberg.com',\n    'youtube.com', 'reddit.com'\n]\n\ntotal_per_year = stories.groupby('year').size().rename('total')\ntracked = stories[stories['domain'].isin(TRACKED)]\npivot = (\n    tracked.groupby(['year', 'domain']).size()\n    .unstack(fill_value=0)\n    .div(total_per_year, axis=0) * 100\n)\n\nfig, ax = plt.subplots(figsize=(14, 6))\npivot.plot(ax=ax, linewidth=2, marker='o', markersize=4)\nax.set_title('Domain share of HN stories scoring ≥ 10 (% of year total)', fontsize=14, fontweight='bold')\nax.set_ylabel('Share (%)')\nax.legend(loc='upper left', fontsize=8, ncol=2)\nplt.tight_layout()\nsave(fig, '../data/fig_domain_share.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/04_domain_dominance.html#top-10-domains-per-year-ranked-table",
+    "href": "notebooks/04_domain_dominance.html#top-10-domains-per-year-ranked-table",
+    "title": "04 · Domain Dominance",
+    "section": "Top 10 domains per year (ranked table)",
+    "text": "Top 10 domains per year (ranked table)\n\n\nShow code\nfor year in [2010, 2015, 2018, 2021, 2024]:\n    top = (\n        stories[stories['year'] == year]\n        .groupby('domain').size()\n        .sort_values(ascending=False)\n        .head(10)\n    )\n    print(f'\\n=== {year} ===')\n    print(top.to_string())"
+  },
+  {
+    "objectID": "notebooks/01_data_acquisition.html",
+    "href": "notebooks/01_data_acquisition.html",
+    "title": "01 · Data Acquisition",
+    "section": "",
+    "text": "Downloads the full Hacker News dataset from Google BigQuery and saves it as local Parquet files for fast querying in subsequent notebooks.\nPrerequisites: 1. Create a GCP project at console.cloud.google.com and enable the BigQuery API 2. Run gcloud auth application-default login in your terminal 3. Copy .env.example to .env and set GCP_PROJECT_ID\nBigQuery free tier: 1 TB/month of queries. This notebook uses ~10 GB.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport os\nfrom dotenv import load_dotenv\nload_dotenv('../.env')\n\nimport duckdb\nimport pandas as pd\nfrom src.loader import fetch_from_bigquery, db, STORIES_PARQUET, COMMENTS_PARQUET\n\nGCP_PROJECT = os.environ['GCP_PROJECT_ID']\nprint(f'Using GCP project: {GCP_PROJECT}')"
+  },
+  {
+    "objectID": "notebooks/01_data_acquisition.html#download-from-bigquery",
+    "href": "notebooks/01_data_acquisition.html#download-from-bigquery",
+    "title": "01 · Data Acquisition",
+    "section": "Download from BigQuery",
+    "text": "Download from BigQuery\nThis takes 5–15 minutes and only needs to run once.\n\n\nShow code\nfetch_from_bigquery(GCP_PROJECT)"
+  },
+  {
+    "objectID": "notebooks/01_data_acquisition.html#profile-the-dataset",
+    "href": "notebooks/01_data_acquisition.html#profile-the-dataset",
+    "title": "01 · Data Acquisition",
+    "section": "Profile the dataset",
+    "text": "Profile the dataset\n\n\nShow code\ncon = db()\n\nprint('=== STORIES ===')\nprint(con.execute('SELECT COUNT(*) AS n_stories FROM stories').df())\nprint(con.execute('SELECT MIN(posted_at), MAX(posted_at) FROM stories').df())\nprint(con.execute('SELECT COUNT(*) FROM stories WHERE url IS NOT NULL').df())\nprint()\nprint('=== COMMENTS ===')\nprint(con.execute('SELECT COUNT(*) AS n_comments FROM comments').df())\n\n\n\n\nShow code\n# Score distribution sanity check\ncon.execute(\"\"\"\n    SELECT\n        MIN(score)  AS min_score,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY score) AS median_score,\n        AVG(score)  AS mean_score,\n        MAX(score)  AS max_score\n    FROM stories\n\"\"\").df()\n\n\n\n\nShow code\n# Stories per year\nper_year = con.execute(\"\"\"\n    SELECT\n        YEAR(posted_at) AS year,\n        COUNT(*) AS n_stories,\n        AVG(score) AS avg_score\n    FROM stories\n    GROUP BY 1\n    ORDER BY 1\n\"\"\").df()\n\ndisplay(per_year)\n\n\n\n\nShow code\nimport matplotlib.pyplot as plt\nsys.path.insert(0, '..')\nfrom src.viz import set_style, bar_chart\n\nset_style()\nfig, ax = plt.subplots(figsize=(13, 4))\nax.bar(per_year['year'], per_year['n_stories'], color='#e8604c', edgecolor='white')\nax.set_title('Hacker News stories submitted per year', fontsize=14, fontweight='bold')\nax.set_xlabel('Year')\nax.set_ylabel('Stories')\nplt.tight_layout()\nplt.savefig('../data/fig_stories_per_year.png', dpi=150, bbox_inches='tight')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/06_community_behavior.html",
+    "href": "notebooks/06_community_behavior.html",
+    "title": "06 · Community Behavior",
+    "section": "",
+    "text": "HN has a power-law karma distribution, dead hours, and a specific taxonomy of post types. Here we quantify the inequality, identify the structural patterns, and find the posts that generate debate without generating upvotes.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom src.loader import db\nfrom src.viz import set_style, save\n\nset_style()\ncon = db()\nShow code\nstories = con.execute(\"\"\"\n    SELECT\n        title,\n        score,\n        comment_count,\n        author,\n        HOUR(posted_at) AS hour_utc,\n        DAYOFWEEK(posted_at) AS dow,\n        YEAR(posted_at) AS year\n    FROM stories\n    WHERE score IS NOT NULL AND year BETWEEN 2008 AND 2024\n\"\"\").df()"
+  },
+  {
+    "objectID": "notebooks/06_community_behavior.html#score-inequality-gini-coefficient",
+    "href": "notebooks/06_community_behavior.html#score-inequality-gini-coefficient",
+    "title": "06 · Community Behavior",
+    "section": "Score inequality — Gini coefficient",
+    "text": "Score inequality — Gini coefficient\n\n\nShow code\ndef gini(arr: np.ndarray) -&gt; float:\n    arr = np.sort(arr)\n    n = len(arr)\n    return (2 * np.sum(np.arange(1, n + 1) * arr) / (n * arr.sum())) - (n + 1) / n\n\nscores = stories['score'].dropna().values\ng = gini(scores)\nprint(f'Gini coefficient of HN story scores: {g:.3f}')\nprint('(0 = perfect equality, 1 = one story gets all points)')\n\n# Lorenz curve\nsorted_scores = np.sort(scores)\ncumulative_scores = np.cumsum(sorted_scores) / sorted_scores.sum()\nn = len(sorted_scores)\ncumulative_pop = np.arange(1, n + 1) / n\n\nfig, ax = plt.subplots(figsize=(7, 6))\nax.plot(cumulative_pop * 100, cumulative_scores * 100, color='#e8604c', linewidth=2, label=f'HN stories (Gini={g:.2f})')\nax.plot([0, 100], [0, 100], 'k--', linewidth=1, alpha=0.5, label='Perfect equality')\nax.fill_between(cumulative_pop * 100, cumulative_scores * 100, cumulative_pop * 100, alpha=0.15, color='#e8604c')\nax.set_title('Lorenz curve of HN story scores', fontsize=13, fontweight='bold')\nax.set_xlabel('Cumulative % of stories (sorted by score)')\nax.set_ylabel('Cumulative % of total points')\nax.legend()\nplt.tight_layout()\nsave(fig, '../data/fig_lorenz.png')\nplt.show()\n\ntop1_pct = np.percentile(scores, 99)\ntop1_share = scores[scores &gt;= top1_pct].sum() / scores.sum() * 100\nprint(f'Top 1% of stories (score ≥ {top1_pct:.0f}) capture {top1_share:.1f}% of all points')"
+  },
+  {
+    "objectID": "notebooks/06_community_behavior.html#ask-hn-vs-show-hn-vs-plain-links",
+    "href": "notebooks/06_community_behavior.html#ask-hn-vs-show-hn-vs-plain-links",
+    "title": "06 · Community Behavior",
+    "section": "Ask HN vs Show HN vs plain links",
+    "text": "Ask HN vs Show HN vs plain links\n\n\nShow code\nstories['post_type'] = 'Link'\nstories.loc[stories['title'].str.startswith('Ask HN:'), 'post_type'] = 'Ask HN'\nstories.loc[stories['title'].str.startswith('Show HN:'), 'post_type'] = 'Show HN'\nstories.loc[stories['title'].str.startswith('Tell HN:'), 'post_type'] = 'Tell HN'\n\ntype_stats = (\n    stories.groupby('post_type')\n    .agg(\n        count=('score', 'count'),\n        median_score=('score', 'median'),\n        median_comments=('comment_count', 'median'),\n    )\n    .sort_values('count', ascending=False)\n)\ndisplay(type_stats)"
+  },
+  {
+    "objectID": "notebooks/06_community_behavior.html#power-authors-top-submitters-of-front-page-stories",
+    "href": "notebooks/06_community_behavior.html#power-authors-top-submitters-of-front-page-stories",
+    "title": "06 · Community Behavior",
+    "section": "Power authors — top submitters of front-page stories",
+    "text": "Power authors — top submitters of front-page stories\n\n\nShow code\nTOP_SCORE = 200\npower = (\n    stories[stories['score'] &gt;= TOP_SCORE]\n    .groupby('author')\n    .agg(viral_posts=('score', 'count'), total_points=('score', 'sum'))\n    .sort_values('viral_posts', ascending=False)\n    .head(25)\n)\n\nfig, ax = plt.subplots(figsize=(10, 7))\nax.barh(power.index[::-1], power['viral_posts'][::-1], color='#e8604c', edgecolor='white')\nax.set_title(f'Top submitters of stories scoring ≥ {TOP_SCORE}', fontsize=13, fontweight='bold')\nax.set_xlabel('Number of high-score posts')\nplt.tight_layout()\nsave(fig, '../data/fig_power_authors.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html",
+    "href": "notebooks/02_hype_cycles.html",
+    "title": "02 · Technology Hype Cycles",
+    "section": "",
+    "text": "HN is a real-time seismograph of the tech industry. By tracking how often each technology appears in story titles, we can draw its full life cycle: birth, hype peak, and decline.\nHeadline chart: A heatmap of 30+ technologies × 18 years — the graveyard and the nursery of tech in a single image.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom src.loader import db\nfrom src.nlp import TECH_KEYWORDS, keyword_hits\nfrom src.viz import set_style, hype_heatmap, time_series, save\n\nset_style()\ncon = db()"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#load-stories-with-year",
+    "href": "notebooks/02_hype_cycles.html#load-stories-with-year",
+    "title": "02 · Technology Hype Cycles",
+    "section": "Load stories with year",
+    "text": "Load stories with year\n\n\nShow code\nstories = con.execute(\"\"\"\n    SELECT title, YEAR(posted_at) AS year, score\n    FROM stories\n    WHERE year BETWEEN 2007 AND 2024\n      AND score &gt;= 1\n\"\"\").df()\n\nprint(f'{len(stories):,} stories loaded')\nstories.head()"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#tag-each-story-with-matching-keywords",
+    "href": "notebooks/02_hype_cycles.html#tag-each-story-with-matching-keywords",
+    "title": "02 · Technology Hype Cycles",
+    "section": "Tag each story with matching keywords",
+    "text": "Tag each story with matching keywords\n\n\nShow code\nfor name, patterns in TECH_KEYWORDS.items():\n    col = f'kw_{name}'\n    stories[col] = stories['title'].apply(lambda t: keyword_hits(str(t), patterns))\n\nprint('Keyword columns added:', [c for c in stories.columns if c.startswith('kw_')][:5], '...')"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#build-normalized-frequency-matrix",
+    "href": "notebooks/02_hype_cycles.html#build-normalized-frequency-matrix",
+    "title": "02 · Technology Hype Cycles",
+    "section": "Build normalized frequency matrix",
+    "text": "Build normalized frequency matrix\n\n\nShow code\nkw_cols = [f'kw_{k}' for k in TECH_KEYWORDS]\nstories_per_year = stories.groupby('year').size().rename('total')\n\n# Sum hits per keyword per year, normalize by total stories that year\nfreq = stories.groupby('year')[kw_cols].sum()\nfreq_norm = freq.div(stories_per_year, axis=0) * 10_000  # per 10k stories\n\n# Rename columns to clean labels\nfreq_norm.columns = list(TECH_KEYWORDS.keys())\nfreq_norm = freq_norm.T  # technologies as rows, years as columns\n\n# Keep only techs with at least one year above threshold\nfreq_norm = freq_norm[freq_norm.max(axis=1) &gt; 1]\n\n# Sort by year of peak mention\nfreq_norm['peak_year'] = freq_norm.idxmax(axis=1)\nfreq_norm = freq_norm.sort_values('peak_year').drop(columns='peak_year')\n\nprint(freq_norm.shape)\nfreq_norm"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#the-headline-heatmap",
+    "href": "notebooks/02_hype_cycles.html#the-headline-heatmap",
+    "title": "02 · Technology Hype Cycles",
+    "section": "The headline heatmap",
+    "text": "The headline heatmap\n\n\nShow code\nfig = hype_heatmap(\n    freq_norm,\n    title='Technology Hype Cycles on Hacker News (2007–2024)\\nMentions per 10,000 stories'\n)\nsave(fig, '../data/fig_hype_heatmap.png')\nplt.show()\nprint('Key patterns to look for:')\nprint('  - Bitcoin/Blockchain peak: 2017–2018')\nprint('  - ChatGPT/LLM spike: 2023 onward')\nprint('  - Heroku flatline after 2022 (Salesforce killed free tier)')\nprint('  - Ruby decline: post-2014')"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#ai-discourse-timeline-the-chatgpt-inflection",
+    "href": "notebooks/02_hype_cycles.html#ai-discourse-timeline-the-chatgpt-inflection",
+    "title": "02 · Technology Hype Cycles",
+    "section": "AI discourse timeline — the ChatGPT inflection",
+    "text": "AI discourse timeline — the ChatGPT inflection\n\n\nShow code\nai_cols = ['kw_Machine Learning', 'kw_Deep Learning', 'kw_GPT', 'kw_ChatGPT', 'kw_LLM']\nai_monthly = con.execute(\"\"\"\n    SELECT\n        DATE_TRUNC('month', posted_at) AS month,\n        COUNT(*) AS total\n    FROM stories\n    WHERE YEAR(posted_at) &gt;= 2015\n    GROUP BY 1\n    ORDER BY 1\n\"\"\").df()\n\n# Add monthly AI keyword counts\nai_stories = stories[stories['year'] &gt;= 2015].copy()\n# (simplified: use the tagged dataframe we already have)\n\nfig, ax = plt.subplots(figsize=(14, 5))\nfor kw in ['Machine Learning', 'Deep Learning', 'GPT', 'ChatGPT', 'LLM', 'Transformer']:\n    col = f'kw_{kw}'\n    if col not in stories.columns:\n        continue\n    monthly = stories[stories['year'] &gt;= 2015].groupby('year')[col].sum()\n    ax.plot(monthly.index, monthly.values, linewidth=2, label=kw, marker='o', markersize=4)\n\nax.axvline(x=2022.9, color='red', linestyle='--', alpha=0.7, label='ChatGPT launch (Nov 2022)')\nax.set_title('AI / ML discourse on Hacker News (2015–2024)', fontsize=14, fontweight='bold')\nax.set_ylabel('Stories mentioning keyword')\nax.legend(fontsize=9)\nplt.tight_layout()\nplt.savefig('../data/fig_ai_timeline.png', dpi=150, bbox_inches='tight')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/02_hype_cycles.html#x-is-dead-technology-obituaries",
+    "href": "notebooks/02_hype_cycles.html#x-is-dead-technology-obituaries",
+    "title": "02 · Technology Hype Cycles",
+    "section": "“X is dead” — technology obituaries",
+    "text": "“X is dead” — technology obituaries\n\n\nShow code\nimport re\n\ndead_pattern = r'\\b(is dead|is dying|is over|killed|deprecated|sunsetting)\\b'\nobituaries = stories[stories['title'].str.contains(dead_pattern, case=False, na=False, regex=True)]\n\nprint(f'{len(obituaries):,} obituary posts found')\n\nobit_by_year = obituaries.groupby('year').size()\n\nfig, ax = plt.subplots(figsize=(12, 4))\nax.bar(obit_by_year.index, obit_by_year.values, color='#555', edgecolor='white')\nax.set_title('\"X is dead / dying\" posts on HN per year', fontsize=14, fontweight='bold')\nax.set_ylabel('Posts')\nplt.tight_layout()\nplt.savefig('../data/fig_obituaries.png', dpi=150, bbox_inches='tight')\nplt.show()\n\nprint('\\nTop obituary titles:')\nprint(obituaries.nlargest(20, 'score')[['title', 'year', 'score']].to_string(index=False))"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "HackerMining",
+    "section": "",
+    "text": "Hacker News is the tech industry’s water cooler. Since 2006, millions of stories have been submitted, voted on, and discussed. The aggregate of those decisions is a real-time seismograph of what the industry cares about — and when.\nThis project mines the full public HN dataset (35M+ items via Google BigQuery) to answer questions that are hard to answer from the inside:"
+  },
+  {
+    "objectID": "index.html#the-7-key-findings",
+    "href": "index.html#the-7-key-findings",
+    "title": "HackerMining",
+    "section": "The 7 Key Findings",
+    "text": "The 7 Key Findings\n\nTechnology life cycles are shockingly short — most go from hype peak to noise in under 4 years\nChatGPT was a 10× discontinuity, not just a bump — the largest single-event spike in 18 years of data\nThe best time to post is Tuesday 10am UTC — weekend posts underperform by 30–40%\nHN score inequality rivals wealth inequality — Gini &gt; 0.8, top 1% get 40%+ of all points\nGitHub replaced personal blogs as the default link target by 2018\nAI stories now score 2× the baseline — the topic is an upvote signal independent of quality\n~50 power users drive a disproportionate share of all viral content"
+  },
+  {
+    "objectID": "index.html#chapters",
+    "href": "index.html#chapters",
+    "title": "HackerMining",
+    "section": "Chapters",
+    "text": "Chapters\n\n\n\nChapter\nWhat it answers\n\n\n\n\nHype Cycles\nWhich technologies rose, peaked, and died — and when\n\n\nFront Page Anatomy\nWhat actually predicts a high-score post\n\n\nDomain Dominance\nWho owns HN’s front page in each era\n\n\nAI Discourse\nHow the community’s relationship with AI evolved\n\n\nCommunity Behavior\nKarma inequality, power users, dead hours\n\n\nKey Findings\nThe 7 most surprising things in 20 years of data"
+  },
+  {
+    "objectID": "index.html#dataset",
+    "href": "index.html#dataset",
+    "title": "HackerMining",
+    "section": "Dataset",
+    "text": "Dataset\n\nSource: bigquery-public-data.hacker_news.full (Google BigQuery public dataset)\nSize: 35M+ items, 2006–2024\nCost: Free tier (1 TB/month of queries)\nDownload: see notebooks/01_data_acquisition.ipynb"
+  },
+  {
+    "objectID": "notebooks/05_ai_discourse.html",
+    "href": "notebooks/05_ai_discourse.html",
+    "title": "05 · AI Discourse on Hacker News",
+    "section": "",
+    "text": "How did the HN community’s relationship with AI evolve? From sceptical blog posts about “neural networks” in 2012, through the deep learning excitement of 2016, to the ChatGPT earthquake of November 2022 — quantified.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport matplotlib.dates as mdates\nfrom src.loader import db\nfrom src.nlp import keyword_hits, sentiment_score\nfrom src.viz import set_style, save\n\nset_style()\ncon = db()\nShow code\nstories = con.execute(\"\"\"\n    SELECT\n        title,\n        score,\n        comment_count,\n        posted_at,\n        YEAR(posted_at) AS year,\n        DATE_TRUNC('month', posted_at) AS month\n    FROM stories\n    WHERE YEAR(posted_at) BETWEEN 2012 AND 2024\n      AND score &gt;= 1\n\"\"\").df()\n\nprint(f'{len(stories):,} stories')"
+  },
+  {
+    "objectID": "notebooks/05_ai_discourse.html#monthly-ai-story-volume-the-chatgpt-inflection",
+    "href": "notebooks/05_ai_discourse.html#monthly-ai-story-volume-the-chatgpt-inflection",
+    "title": "05 · AI Discourse on Hacker News",
+    "section": "Monthly AI story volume — the ChatGPT inflection",
+    "text": "Monthly AI story volume — the ChatGPT inflection\n\n\nShow code\nAI_TERMS = {\n    'Machine Learning': [r'machine learning', r'\\bml\\b'],\n    'Deep Learning': ['deep learning', 'neural network'],\n    'GPT / OpenAI': [r'\\bgpt\\b', 'openai', 'gpt-4', 'gpt-3'],\n    'ChatGPT': ['chatgpt'],\n    'LLM': [r'\\bllm\\b', 'large language model'],\n}\n\nfor label, patterns in AI_TERMS.items():\n    stories[label] = stories['title'].apply(lambda t: keyword_hits(str(t), patterns))\n\nmonthly_totals = stories.groupby('month').size().rename('total')\n\nfig, axes = plt.subplots(len(AI_TERMS), 1, figsize=(14, 12), sharex=True)\nchatgpt_date = pd.Timestamp('2022-11-01')\n\nfor ax, (label, _) in zip(axes, AI_TERMS.items()):\n    monthly = stories.groupby('month')[label].sum()\n    share = (monthly / monthly_totals * 1000).fillna(0)\n    ax.fill_between(share.index, share.values, alpha=0.4, color='#e8604c')\n    ax.plot(share.index, share.values, color='#e8604c', linewidth=1.5)\n    ax.axvline(chatgpt_date, color='black', linestyle='--', alpha=0.5, linewidth=1)\n    ax.set_ylabel(f'{label}\\n(per 1k stories)', fontsize=8)\n    ax.set_yticks([])\n\naxes[0].set_title('AI discourse on Hacker News (2012–2024)', fontsize=14, fontweight='bold')\naxes[-1].xaxis.set_major_formatter(mdates.DateFormatter('%Y'))\nfig.text(0.92, 0.5, '← ChatGPT launch', va='center', rotation=90, fontsize=9, color='gray')\nplt.tight_layout()\nsave(fig, '../data/fig_ai_discourse.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/05_ai_discourse.html#sentiment-of-ai-titles-over-time",
+    "href": "notebooks/05_ai_discourse.html#sentiment-of-ai-titles-over-time",
+    "title": "05 · AI Discourse on Hacker News",
+    "section": "Sentiment of AI titles over time",
+    "text": "Sentiment of AI titles over time\n\n\nShow code\nai_stories = stories[stories[list(AI_TERMS.keys())].any(axis=1)].copy()\nai_stories['sentiment'] = ai_stories['title'].apply(sentiment_score)\n\nsentiment_by_year = ai_stories.groupby('year')['sentiment'].mean()\n\nfig, ax = plt.subplots(figsize=(12, 4))\ncolors = ['#e8604c' if v &gt; 0 else '#4c6de8' for v in sentiment_by_year.values]\nax.bar(sentiment_by_year.index, sentiment_by_year.values, color=colors, edgecolor='white')\nax.axhline(0, color='gray', linewidth=0.8)\nax.set_title('Average sentiment of AI-related HN story titles (positive = optimistic)', fontsize=13, fontweight='bold')\nax.set_ylabel('VADER compound sentiment')\nplt.tight_layout()\nsave(fig, '../data/fig_ai_sentiment.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/05_ai_discourse.html#score-premium-do-ai-stories-get-more-upvotes",
+    "href": "notebooks/05_ai_discourse.html#score-premium-do-ai-stories-get-more-upvotes",
+    "title": "05 · AI Discourse on Hacker News",
+    "section": "Score premium: do AI stories get more upvotes?",
+    "text": "Score premium: do AI stories get more upvotes?\n\n\nShow code\nstories['is_ai'] = stories[list(AI_TERMS.keys())].any(axis=1)\n\nscore_comparison = (\n    stories.groupby(['year', 'is_ai'])['score']\n    .median()\n    .unstack()\n    .rename(columns={False: 'Non-AI stories', True: 'AI stories'})\n)\n\nfig, ax = plt.subplots(figsize=(12, 4))\nscore_comparison.plot(ax=ax, linewidth=2, marker='o', markersize=4)\nax.set_title('Median score: AI stories vs all others', fontsize=13, fontweight='bold')\nax.set_ylabel('Median score')\nplt.tight_layout()\nsave(fig, '../data/fig_ai_score_premium.png')\nplt.show()\n\npremium = score_comparison['AI stories'] / score_comparison['Non-AI stories']\nprint('Score premium of AI stories vs baseline:')\nprint(premium.tail(5))"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html",
+    "href": "notebooks/07_key_findings.html",
+    "title": "07 · Key Findings",
+    "section": "",
+    "text": "The 7 most surprising things we found in 20 years of Hacker News data.\nShow code\nfrom IPython.display import Image, display as ipy_display\nfrom pathlib import Path\n\ndef show(path: str, caption: str = '') -&gt; None:\n    p = Path(f'../data/{path}')\n    if p.exists():\n        ipy_display(Image(str(p), width=900))\n    if caption:\n        print(f'↑ {caption}\\n')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-1-technology-life-cycles-are-shockingly-short",
+    "href": "notebooks/07_key_findings.html#finding-1-technology-life-cycles-are-shockingly-short",
+    "title": "07 · Key Findings",
+    "section": "Finding 1 — Technology life cycles are shockingly short",
+    "text": "Finding 1 — Technology life cycles are shockingly short\nThe hype heatmap shows that most technologies go from birth to peak to irrelevance in 3–5 years on HN. Blockchain peaked in 2018 and is now at background noise. Heroku flatlines after 2022. ChatGPT’s spike in 2023 is the single largest one-year jump in the dataset.\n\n\nShow code\nshow('fig_hype_heatmap.png', 'Technology hype cycles 2007–2024')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-2-chatgpt-was-a-10-discontinuity",
+    "href": "notebooks/07_key_findings.html#finding-2-chatgpt-was-a-10-discontinuity",
+    "title": "07 · Key Findings",
+    "section": "Finding 2 — ChatGPT was a 10× discontinuity",
+    "text": "Finding 2 — ChatGPT was a 10× discontinuity\nEvery previous AI milestone (AlphaGo, GPT-3, DALL-E) caused a bump. ChatGPT caused a step-change. In November 2022, AI-related stories went from ~3% of front-page content to ~18% almost overnight — and never fully came back down.\n\n\nShow code\nshow('fig_ai_discourse.png', 'AI discourse monthly, 2012–2024')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-3-the-best-time-to-post-is-tuesday-10am-utc",
+    "href": "notebooks/07_key_findings.html#finding-3-the-best-time-to-post-is-tuesday-10am-utc",
+    "title": "07 · Key Findings",
+    "section": "Finding 3 — The best time to post is Tuesday 10am UTC",
+    "text": "Finding 3 — The best time to post is Tuesday 10am UTC\nWeekend and late-night posts underperform by 30–40% in median score. The scoring sweet spot is weekday mornings in US Eastern time (UTC-5), when the most active voters are just starting their day.\n\n\nShow code\nshow('fig_timing_heatmap.png', 'Median score by day × hour')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-4-hn-score-inequality-rivals-wealth-inequality",
+    "href": "notebooks/07_key_findings.html#finding-4-hn-score-inequality-rivals-wealth-inequality",
+    "title": "07 · Key Findings",
+    "section": "Finding 4 — HN score inequality rivals wealth inequality",
+    "text": "Finding 4 — HN score inequality rivals wealth inequality\nThe Gini coefficient of story scores is above 0.8 — comparable to national wealth inequality in the most unequal countries. The top 1% of stories capture more than 40% of all upvotes ever cast.\n\n\nShow code\nshow('fig_lorenz.png', 'Lorenz curve of HN story scores')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-5-github-replaced-personal-blogs-as-the-default-link-target",
+    "href": "notebooks/07_key_findings.html#finding-5-github-replaced-personal-blogs-as-the-default-link-target",
+    "title": "07 · Key Findings",
+    "section": "Finding 5 — GitHub replaced personal blogs as the default link target",
+    "text": "Finding 5 — GitHub replaced personal blogs as the default link target\nIn 2010, the top domains were personal .com and .org blogs. By 2018, github.com was the single most linked domain. Show HN posts almost exclusively link to GitHub — it became the de-facto portfolio site for the HN audience.\n\n\nShow code\nshow('fig_domain_share.png', 'Domain share over time')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-6-ai-stories-score-2-higher-than-average-since-2023",
+    "href": "notebooks/07_key_findings.html#finding-6-ai-stories-score-2-higher-than-average-since-2023",
+    "title": "07 · Key Findings",
+    "section": "Finding 6 — AI stories score 2× higher than average since 2023",
+    "text": "Finding 6 — AI stories score 2× higher than average since 2023\nBefore 2020 there was no significant score premium for AI-related stories. By 2023–2024 the median AI story scores roughly double the non-AI baseline — meaning the topic itself is now a significant upvote signal, independent of quality.\n\n\nShow code\nshow('fig_ai_score_premium.png', 'Score premium of AI stories')"
+  },
+  {
+    "objectID": "notebooks/07_key_findings.html#finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content",
+    "href": "notebooks/07_key_findings.html#finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content",
+    "title": "07 · Key Findings",
+    "section": "Finding 7 — A 50-user network drives a disproportionate share of viral content",
+    "text": "Finding 7 — A 50-user network drives a disproportionate share of viral content\nThe top 50 submitters by high-score post count have each posted 10–50+ stories scoring above 200. HN’s front page is significantly shaped by a small, recurring set of curators — not random submissions.\n\n\nShow code\nshow('fig_power_authors.png', 'Top submitters of viral stories')"
+  },
+  {
+    "objectID": "notebooks/03_front_page_anatomy.html",
+    "href": "notebooks/03_front_page_anatomy.html",
+    "title": "03 · Anatomy of a Front-Page Post",
+    "section": "",
+    "text": "What separates a 500-point story from one that gets 3 points and dies? We analyse title features, timing, and metadata to find the real predictors.\nShow code\nimport sys\nsys.path.insert(0, '..')\n\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom src.loader import db\nfrom src.nlp import title_features, extract_domain\nfrom src.viz import set_style, heatmap_2d, bar_chart, save\n\nset_style()\ncon = db()\nShow code\nstories = con.execute(\"\"\"\n    SELECT\n        title,\n        url,\n        score,\n        comment_count,\n        posted_at,\n        HOUR(posted_at)    AS hour_utc,\n        DAYOFWEEK(posted_at) AS dow,   -- 0=Sunday in DuckDB\n        YEAR(posted_at)    AS year\n    FROM stories\n    WHERE score IS NOT NULL\n      AND year BETWEEN 2010 AND 2024\n\"\"\").df()\n\nstories = title_features(stories)\nstories['domain'] = stories['url'].apply(extract_domain)\nprint(f'{len(stories):,} stories')"
+  },
+  {
+    "objectID": "notebooks/03_front_page_anatomy.html#when-to-post-score-by-hour-day-of-week",
+    "href": "notebooks/03_front_page_anatomy.html#when-to-post-score-by-hour-day-of-week",
+    "title": "03 · Anatomy of a Front-Page Post",
+    "section": "When to post: score by hour × day-of-week",
+    "text": "When to post: score by hour × day-of-week\n\n\nShow code\npivot = stories.groupby(['dow', 'hour_utc'])['score'].median().unstack()\npivot.index = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']\n\nfig = heatmap_2d(\n    pivot,\n    title='Median story score by day-of-week and hour (UTC)',\n    xlabel='Hour (UTC)',\n    ylabel='Day of week',\n)\nsave(fig, '../data/fig_timing_heatmap.png')\nplt.show()\n\nbest_hour = pivot.values.flatten().argmax()\nprint(f'Best slot: {pivot.stack().idxmax()} UTC')"
+  },
+  {
+    "objectID": "notebooks/03_front_page_anatomy.html#title-length-vs-score",
+    "href": "notebooks/03_front_page_anatomy.html#title-length-vs-score",
+    "title": "03 · Anatomy of a Front-Page Post",
+    "section": "Title length vs score",
+    "text": "Title length vs score\n\n\nShow code\nbins = pd.cut(stories['title_len_words'], bins=[0,5,8,11,14,17,30], labels=['1–5','6–8','9–11','12–14','15–17','18+'])\nlength_score = stories.groupby(bins, observed=True)['score'].median().reset_index()\nlength_score.columns = ['title_words', 'median_score']\n\nfig = bar_chart(\n    list(length_score['title_words'].astype(str)),\n    list(length_score['median_score']),\n    title='Median score by title word count',\n    xlabel='Median score',\n    horizontal=True,\n)\nsave(fig, '../data/fig_title_length.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/03_front_page_anatomy.html#questions-vs-statements-vs-numbers",
+    "href": "notebooks/03_front_page_anatomy.html#questions-vs-statements-vs-numbers",
+    "title": "03 · Anatomy of a Front-Page Post",
+    "section": "Questions vs statements vs numbers",
+    "text": "Questions vs statements vs numbers\n\n\nShow code\nfeature_scores = {\n    'Question (ends with ?)': stories[stories['title_is_question']]['score'].median(),\n    'Contains a number': stories[stories['title_has_number']]['score'].median(),\n    'Positive sentiment': stories[stories['title_sentiment'] &gt; 0.1]['score'].median(),\n    'Negative sentiment': stories[stories['title_sentiment'] &lt; -0.1]['score'].median(),\n    'Neutral sentiment': stories[stories['title_sentiment'].between(-0.1, 0.1)]['score'].median(),\n    'All stories (baseline)': stories['score'].median(),\n}\n\nfig = bar_chart(\n    list(feature_scores.keys()),\n    list(feature_scores.values()),\n    title='Median score by title feature',\n    xlabel='Median score',\n)\nsave(fig, '../data/fig_title_features.png')\nplt.show()"
+  },
+  {
+    "objectID": "notebooks/03_front_page_anatomy.html#discussion-maximizers-high-comments-low-score",
+    "href": "notebooks/03_front_page_anatomy.html#discussion-maximizers-high-comments-low-score",
+    "title": "03 · Anatomy of a Front-Page Post",
+    "section": "Discussion maximizers: high comments, low score",
+    "text": "Discussion maximizers: high comments, low score\n\n\nShow code\ncontroversy = stories.dropna(subset=['comment_count']).copy()\ncontroversy['controversy_ratio'] = controversy['comment_count'] / (controversy['score'] + 1)\n\nprint('Top 20 discussion-maximizing posts (most comments relative to score):')\ntop_controversial = controversy.nlargest(20, 'controversy_ratio')[['title', 'year', 'score', 'comment_count', 'controversy_ratio']]\ndisplay(top_controversial)"
+  }
+]
