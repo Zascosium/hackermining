@@ -1,0 +1,41 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "HackerMining"
+  description: "20 years of Hacker News — a data investigation"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: notebooks/02_hype_cycles.ipynb
+        text: Hype Cycles
+      - href: notebooks/03_front_page_anatomy.ipynb
+        text: Front Page
+      - href: notebooks/04_domain_dominance.ipynb
+        text: Domains
+      - href: notebooks/05_ai_discourse.ipynb
+        text: AI Discourse
+      - href: notebooks/06_community_behavior.ipynb
+        text: Community
+      - href: notebooks/07_key_findings.ipynb
+        text: Key Findings
+    right:
+      - icon: github
+        href: https://github.com/Zascosium/hackermining
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    code-summary: "Show code"
+    fig-width: 10
+    fig-height: 6
+    highlight-style: github
+
+execute:
+  freeze: true   # use pre-rendered outputs; don't re-run notebooks on publish
+  echo: true

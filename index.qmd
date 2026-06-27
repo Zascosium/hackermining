@@ -1,0 +1,42 @@
+---
+title: "HackerMining"
+subtitle: "20 years of Hacker News — a data investigation"
+---
+
+Hacker News is the tech industry's water cooler. Since 2006, millions of stories have been submitted, voted on, and discussed. The aggregate of those decisions is a **real-time seismograph of what the industry cares about** — and when.
+
+This project mines the full public HN dataset (35M+ items via Google BigQuery) to answer questions that are hard to answer from the inside:
+
+- When exactly did blockchain die on HN?
+- How big was the ChatGPT earthquake — really?
+- What makes a post reach the front page?
+- How unequal is attention on HN?
+- Who actually shapes what the community reads?
+
+## The 7 Key Findings
+
+1. **Technology life cycles are shockingly short** — most go from hype peak to noise in under 4 years
+2. **ChatGPT was a 10× discontinuity**, not just a bump — the largest single-event spike in 18 years of data
+3. **The best time to post is Tuesday 10am UTC** — weekend posts underperform by 30–40%
+4. **HN score inequality rivals wealth inequality** — Gini > 0.8, top 1% get 40%+ of all points
+5. **GitHub replaced personal blogs** as the default link target by 2018
+6. **AI stories now score 2× the baseline** — the topic is an upvote signal independent of quality
+7. **~50 power users** drive a disproportionate share of all viral content
+
+## Chapters
+
+| Chapter | What it answers |
+|---|---|
+| [Hype Cycles](notebooks/02_hype_cycles.ipynb) | Which technologies rose, peaked, and died — and when |
+| [Front Page Anatomy](notebooks/03_front_page_anatomy.ipynb) | What actually predicts a high-score post |
+| [Domain Dominance](notebooks/04_domain_dominance.ipynb) | Who owns HN's front page in each era |
+| [AI Discourse](notebooks/05_ai_discourse.ipynb) | How the community's relationship with AI evolved |
+| [Community Behavior](notebooks/06_community_behavior.ipynb) | Karma inequality, power users, dead hours |
+| [Key Findings](notebooks/07_key_findings.ipynb) | The 7 most surprising things in 20 years of data |
+
+## Dataset
+
+- **Source:** `bigquery-public-data.hacker_news.full` (Google BigQuery public dataset)
+- **Size:** 35M+ items, 2006–2024
+- **Cost:** Free tier (1 TB/month of queries)
+- **Download:** see `notebooks/01_data_acquisition.ipynb`
