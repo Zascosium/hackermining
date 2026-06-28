@@ -20,7 +20,7 @@ This project mines the full public HN dataset (35M+ items via Google BigQuery) t
 3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower
 4. **HN score inequality rivals wealth inequality** — Gini 0.845, top 1% capture 32.6% of all points
 5. **GitHub replaced personal blogs** as the default link target by 2018
-6. **AI content dominates the viral tier** — 25–35% of all stories scoring above 100 since 2023, up from under 5% in 2020
+6. **AI content dominates the viral tier** — AI-related stories account for a dramatically larger share of high-scoring content post-2022, even though median AI scores are no higher than average
 7. **~50 power users** drive a disproportionate share of all viral content
 
 ## Chapters
