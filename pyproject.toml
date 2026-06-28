@@ -9,6 +9,7 @@ description = "20 years of Hacker News — data mining investigative analysis"
 requires-python = ">=3.11"
 dependencies = [
     "google-cloud-bigquery>=3.25",
+    "gcloud",
     "pandas-gbq>=0.24",
     "duckdb>=1.1",
     "pandas>=2.2",
@@ -33,6 +34,9 @@ dev = [
     "ruff>=0.8",
     "pytest>=8",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 100
