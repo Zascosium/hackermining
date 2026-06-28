@@ -15,7 +15,7 @@ Hacker News is the tech industry's water cooler. This project mines the full pub
 3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower across all years
 4. **HN attention is extraordinarily unequal** — Gini coefficient 0.845, top 1% of stories capture 32.6% of all upvotes ever cast
 5. **GitHub replaced personal blogs** as the dominant link target by 2015, and has widened its lead every year since
-6. **AI content now dominates the viral tier** — 25–35% of all stories scoring above 100 since 2023, up from under 5% in 2020; not because AI stories score higher on average, but because the volume of breakout content has exploded
+6. **AI content now dominates the viral tier** — AI-related stories (LLMs, generative AI, OpenAI, Anthropic, Copilot, Stable Diffusion, etc.) account for a far larger share of high-scoring content post-2022; the volume of breakout AI stories has exploded even though median AI story scores no higher than average
 7. **A small network of ~50 power users** drives a disproportionate share of front-page content — HN curation is less random than it appears
 
 ---
