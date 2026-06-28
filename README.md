@@ -12,10 +12,10 @@ Hacker News is the tech industry's water cooler. This project mines the full pub
 
 1. Technology life cycles are shockingly short — most go from hype peak to noise in under 4 years
 2. ChatGPT was a 10× discontinuity — the largest single-event spike in 18 years of data
-3. The best time to post is **Tuesday 10am UTC** — weekend posts underperform by 30–40%
-4. HN score inequality rivals wealth inequality — Gini > 0.8, top 1% get 40%+ of all points
+3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower
+4. HN score inequality rivals wealth inequality — Gini 0.845, top 1% capture 32.6% of all points
 5. GitHub replaced personal blogs as the default link target by 2018
-6. AI stories now score 2× the non-AI baseline — the topic itself is an upvote signal
+6. AI content now makes up **25–35% of all viral stories** (score > 100), up from under 5% in 2020
 7. ~50 power users drive a disproportionate share of all viral content
 
 ---
