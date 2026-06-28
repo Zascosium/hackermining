@@ -17,10 +17,10 @@ This project mines the full public HN dataset (35M+ items via Google BigQuery) t
 
 1. **Technology life cycles are shockingly short** — most go from hype peak to noise in under 4 years
 2. **ChatGPT was a 10× discontinuity**, not just a bump — the largest single-event spike in 18 years of data
-3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower
+3. **Format beats content**: 1–5 word titles average 49.5 points vs 35.7 for long titles; questions score 28% below baseline; peak slot is Sunday 14:00 UTC
 4. **HN score inequality rivals wealth inequality** — Gini 0.845, top 1% capture 32.6% of all points
 5. **GitHub replaced personal blogs** as the default link target by 2018
-6. **AI content dominates the viral tier** — AI-related stories account for a dramatically larger share of high-scoring content post-2022, even though median AI scores are no higher than average
+6. **AI content has taken over the viral tier** — ~5% of all stories scoring above 100 mention AI in 2023, up from ~1% in 2020 (a 5× increase); median AI story scores no higher than average
 7. **~50 power users** drive a disproportionate share of all viral content
 
 ## Chapters

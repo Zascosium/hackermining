@@ -12,10 +12,10 @@ Hacker News is the tech industry's water cooler. This project mines the full pub
 
 1. **Technology hype cycles are shockingly short** — most go from peak to background noise in under 4 years (NFT: peak 2021, irrelevant by 2024)
 2. **ChatGPT was a 10× discontinuity** — the largest single-event spike in 18 years of data, dwarfing AlphaGo, GPT-3, and DALL-E combined
-3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower across all years
+3. **Format beats content**: short titles (1–5 words) average 49.5 points vs 35.7 for 12–14 word titles; questions score 28% below baseline; numbers help slightly; peak posting slot is Sunday 14:00 UTC (Sunday morning US time)
 4. **HN attention is extraordinarily unequal** — Gini coefficient 0.845, top 1% of stories capture 32.6% of all upvotes ever cast
 5. **GitHub replaced personal blogs** as the dominant link target by 2015, and has widened its lead every year since
-6. **AI content now dominates the viral tier** — AI-related stories (LLMs, generative AI, OpenAI, Anthropic, Copilot, Stable Diffusion, etc.) account for a far larger share of high-scoring content post-2022; the volume of breakout AI stories has exploded even though median AI story scores no higher than average
+6. **AI content has taken over the viral tier** — ~5% of all stories scoring above 100 mention AI in 2023, up from ~1% in 2020 (a 5× increase); median AI story scores no higher than average, so this is pure volume, not quality
 7. **A small network of ~50 power users** drives a disproportionate share of front-page content — HN curation is less random than it appears
 
 ---
