@@ -210,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>The 7 most surprising things we found in 20 years of Hacker News data.</p>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image, display <span class="im">as</span> ipy_display</span>
@@ -227,71 +227,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="finding-1-technology-life-cycles-are-shockingly-short" class="level2">
 <h2 class="anchored" data-anchor-id="finding-1-technology-life-cycles-are-shockingly-short">Finding 1 — Technology life cycles are shockingly short</h2>
 <p>The hype heatmap shows that most technologies go from birth to peak to irrelevance in <strong>3–5 years</strong> on HN. Blockchain peaked in 2018 and is now at background noise. Heroku flatlines after 2022. ChatGPT’s spike in 2023 is the single largest one-year jump in the dataset.</p>
-<div id="cell-4" class="cell">
+<div id="cell-4" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_hype_heatmap.png'</span>, <span class="st">'Technology hype cycles 2007–2024'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Technology hype cycles 2007–2024
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-2-chatgpt-was-a-10-discontinuity" class="level2">
 <h2 class="anchored" data-anchor-id="finding-2-chatgpt-was-a-10-discontinuity">Finding 2 — ChatGPT was a 10× discontinuity</h2>
 <p>Every previous AI milestone (AlphaGo, GPT-3, DALL-E) caused a bump. ChatGPT caused a step-change. In November 2022, AI-related stories went from ~3% of front-page content to ~18% almost overnight — and never fully came back down.</p>
-<div id="cell-6" class="cell">
+<div id="cell-6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_discourse.png'</span>, <span class="st">'AI discourse monthly, 2012–2024'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_discourse.png'</span>, <span class="st">'AI discourse monthly, 2012–2024'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ AI discourse monthly, 2012–2024
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-3-the-best-time-to-post-is-tuesday-10am-utc" class="level2">
 <h2 class="anchored" data-anchor-id="finding-3-the-best-time-to-post-is-tuesday-10am-utc">Finding 3 — The best time to post is Tuesday 10am UTC</h2>
 <p>Weekend and late-night posts underperform by 30–40% in median score. The scoring sweet spot is weekday mornings in US Eastern time (UTC-5), when the most active voters are just starting their day.</p>
-<div id="cell-8" class="cell">
+<div id="cell-8" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_timing_heatmap.png'</span>, <span class="st">'Median score by day × hour'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_timing_heatmap.png'</span>, <span class="st">'Median score by day × hour'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Median score by day × hour
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-4-hn-score-inequality-rivals-wealth-inequality" class="level2">
 <h2 class="anchored" data-anchor-id="finding-4-hn-score-inequality-rivals-wealth-inequality">Finding 4 — HN score inequality rivals wealth inequality</h2>
 <p>The Gini coefficient of story scores is above 0.8 — comparable to national wealth inequality in the most unequal countries. The top 1% of stories capture more than 40% of all upvotes ever cast.</p>
-<div id="cell-10" class="cell">
+<div id="cell-10" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_lorenz.png'</span>, <span class="st">'Lorenz curve of HN story scores'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_lorenz.png'</span>, <span class="st">'Lorenz curve of HN story scores'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Lorenz curve of HN story scores
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-5-github-replaced-personal-blogs-as-the-default-link-target" class="level2">
 <h2 class="anchored" data-anchor-id="finding-5-github-replaced-personal-blogs-as-the-default-link-target">Finding 5 — GitHub replaced personal blogs as the default link target</h2>
 <p>In 2010, the top domains were personal <code>.com</code> and <code>.org</code> blogs. By 2018, <code>github.com</code> was the single most linked domain. Show HN posts almost exclusively link to GitHub — it became the de-facto portfolio site for the HN audience.</p>
-<div id="cell-12" class="cell">
+<div id="cell-12" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_domain_share.png'</span>, <span class="st">'Domain share over time'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_domain_share.png'</span>, <span class="st">'Domain share over time'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Domain share over time
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-6-ai-stories-score-2-higher-than-average-since-2023" class="level2">
 <h2 class="anchored" data-anchor-id="finding-6-ai-stories-score-2-higher-than-average-since-2023">Finding 6 — AI stories score 2× higher than average since 2023</h2>
 <p>Before 2020 there was no significant score premium for AI-related stories. By 2023–2024 the median AI story scores roughly double the non-AI baseline — meaning the topic itself is now a significant upvote signal, independent of quality.</p>
-<div id="cell-14" class="cell">
+<div id="cell-14" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_score_premium.png'</span>, <span class="st">'Score premium of AI stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_score_premium.png'</span>, <span class="st">'Score premium of AI stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Score premium of AI stories
+</code></pre>
+</div>
 </div>
 </section>
 <section id="finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content" class="level2">
 <h2 class="anchored" data-anchor-id="finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content">Finding 7 — A 50-user network drives a disproportionate share of viral content</h2>
 <p>The top 50 submitters by high-score post count have each posted 10–50+ stories scoring above 200. HN’s front page is significantly shaped by a small, recurring set of curators — not random submissions.</p>
-<div id="cell-16" class="cell">
+<div id="cell-16" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_power_authors.png'</span>, <span class="st">'Top submitters of viral stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_power_authors.png'</span>, <span class="st">'Top submitters of viral stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>↑ Top submitters of viral stories
+</code></pre>
+</div>
 </div>
 
 
@@ -371,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/Zascosium\.github\.io\/hackermining\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

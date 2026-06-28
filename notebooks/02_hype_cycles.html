@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -210,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>HN is a real-time seismograph of the tech industry. By tracking how often each technology appears in story titles, we can draw its full life cycle: birth, hype peak, and decline.</p>
 <p><strong>Headline chart:</strong> A heatmap of 30+ technologies × 18 years — the graveyard and the nursery of tech in a single image.</p>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -229,7 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="load-stories-with-year" class="level2">
 <h2 class="anchored" data-anchor-id="load-stories-with-year">Load stories with year</h2>
-<div id="cell-4" class="cell">
+<div id="cell-4" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stories <span class="op">=</span> con.execute(<span class="st">"""</span></span>
@@ -242,131 +245,822 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(stories)<span class="sc">:,}</span><span class="ss"> stories loaded'</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>stories.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>5,052,581 stories loaded</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>From Oxford to Silicon Valley</td>
+<td>2007</td>
+<td>25</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>From Oxford to Silicon Valley</td>
+<td>2007</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Y Europe can seed growth of its new stars</td>
+<td>2007</td>
+<td>13</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Adobe gives new flash tools only to Photobucket</td>
+<td>2007</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>New Revenue Stream For Bloggers: TextMark SMS ...</td>
+<td>2007</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
 </div>
 </section>
 <section id="tag-each-story-with-matching-keywords" class="level2">
 <h2 class="anchored" data-anchor-id="tag-each-story-with-matching-keywords">Tag each story with matching keywords</h2>
-<div id="cell-6" class="cell">
+<div id="cell-6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, patterns <span class="kw">in</span> TECH_KEYWORDS.items():</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> <span class="ss">f'kw_</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">'</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    stories[col] <span class="op">=</span> stories[<span class="st">'title'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> t: keyword_hits(<span class="bu">str</span>(t), patterns))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Keyword columns added:'</span>, [c <span class="cf">for</span> c <span class="kw">in</span> stories.columns <span class="cf">if</span> c.startswith(<span class="st">'kw_'</span>)][:<span class="dv">5</span>], <span class="st">'...'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, patterns <span class="kw">in</span> TECH_KEYWORDS.items():</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> <span class="ss">f'kw_</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    stories[col] <span class="op">=</span> stories[<span class="st">'title'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> t: keyword_hits(<span class="bu">str</span>(t), patterns))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Keyword columns added:'</span>, [c <span class="cf">for</span> c <span class="kw">in</span> stories.columns <span class="cf">if</span> c.startswith(<span class="st">'kw_'</span>)][:<span class="dv">5</span>], <span class="st">'...'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword columns added: ['kw_Python', 'kw_Ruby', 'kw_PHP', 'kw_Go', 'kw_Rust'] ...</code></pre>
+</div>
 </div>
 </section>
 <section id="build-normalized-frequency-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="build-normalized-frequency-matrix">Build normalized frequency matrix</h2>
-<div id="cell-8" class="cell">
+<div id="cell-8" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>kw_cols <span class="op">=</span> [<span class="ss">f'kw_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> k <span class="kw">in</span> TECH_KEYWORDS]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>stories_per_year <span class="op">=</span> stories.groupby(<span class="st">'year'</span>).size().rename(<span class="st">'total'</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum hits per keyword per year, normalize by total stories that year</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>freq <span class="op">=</span> stories.groupby(<span class="st">'year'</span>)[kw_cols].<span class="bu">sum</span>()</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq.div(stories_per_year, axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">10_000</span>  <span class="co"># per 10k stories</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns to clean labels</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>freq_norm.columns <span class="op">=</span> <span class="bu">list</span>(TECH_KEYWORDS.keys())</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm.T  <span class="co"># technologies as rows, years as columns</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only techs with at least one year above threshold</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm[freq_norm.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;</span> <span class="dv">1</span>]</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by year of peak mention</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>freq_norm[<span class="st">'peak_year'</span>] <span class="op">=</span> freq_norm.idxmax(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm.sort_values(<span class="st">'peak_year'</span>).drop(columns<span class="op">=</span><span class="st">'peak_year'</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(freq_norm.shape)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>freq_norm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>kw_cols <span class="op">=</span> [<span class="ss">f'kw_</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> k <span class="kw">in</span> TECH_KEYWORDS]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>stories_per_year <span class="op">=</span> stories.groupby(<span class="st">'year'</span>).size().rename(<span class="st">'total'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum hits per keyword per year, normalize by total stories that year</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>freq <span class="op">=</span> stories.groupby(<span class="st">'year'</span>)[kw_cols].<span class="bu">sum</span>()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq.div(stories_per_year, axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">10_000</span>  <span class="co"># per 10k stories</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns to clean labels</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>freq_norm.columns <span class="op">=</span> <span class="bu">list</span>(TECH_KEYWORDS.keys())</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm.T  <span class="co"># technologies as rows, years as columns</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only techs with at least one year above threshold</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm[freq_norm.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;</span> <span class="dv">1</span>]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by year of peak mention</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>freq_norm[<span class="st">'peak_year'</span>] <span class="op">=</span> freq_norm.idxmax(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>freq_norm <span class="op">=</span> freq_norm.sort_values(<span class="st">'peak_year'</span>).drop(columns<span class="op">=</span><span class="st">'peak_year'</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(freq_norm.shape)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>freq_norm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(26, 18)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">2007</th>
+<th data-quarto-table-cell-role="th">2008</th>
+<th data-quarto-table-cell-role="th">2009</th>
+<th data-quarto-table-cell-role="th">2010</th>
+<th data-quarto-table-cell-role="th">2011</th>
+<th data-quarto-table-cell-role="th">2012</th>
+<th data-quarto-table-cell-role="th">2013</th>
+<th data-quarto-table-cell-role="th">2014</th>
+<th data-quarto-table-cell-role="th">2015</th>
+<th data-quarto-table-cell-role="th">2016</th>
+<th data-quarto-table-cell-role="th">2017</th>
+<th data-quarto-table-cell-role="th">2018</th>
+<th data-quarto-table-cell-role="th">2019</th>
+<th data-quarto-table-cell-role="th">2020</th>
+<th data-quarto-table-cell-role="th">2021</th>
+<th data-quarto-table-cell-role="th">2022</th>
+<th data-quarto-table-cell-role="th">2023</th>
+<th data-quarto-table-cell-role="th">2024</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Ruby</th>
+<td>140.174439</td>
+<td>169.590560</td>
+<td>104.489164</td>
+<td>84.291787</td>
+<td>67.190436</td>
+<td>79.486504</td>
+<td>85.701296</td>
+<td>71.264787</td>
+<td>54.080175</td>
+<td>43.163844</td>
+<td>32.694324</td>
+<td>32.783379</td>
+<td>25.428742</td>
+<td>22.106261</td>
+<td>26.438041</td>
+<td>22.568005</td>
+<td>32.802899</td>
+<td>33.403680</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Twitter/X</th>
+<td>64.969740</td>
+<td>134.674856</td>
+<td>243.718050</td>
+<td>129.091000</td>
+<td>112.348420</td>
+<td>107.546236</td>
+<td>97.554639</td>
+<td>76.008897</td>
+<td>64.206742</td>
+<td>61.387354</td>
+<td>42.749980</td>
+<td>45.446487</td>
+<td>37.512301</td>
+<td>55.497196</td>
+<td>57.759025</td>
+<td>154.398588</td>
+<td>98.660785</td>
+<td>20.264003</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">PHP</th>
+<td>22.249911</td>
+<td>38.050991</td>
+<td>44.189646</td>
+<td>37.705074</td>
+<td>39.077711</td>
+<td>44.837716</td>
+<td>40.366317</td>
+<td>32.521220</td>
+<td>29.394745</td>
+<td>22.132481</td>
+<td>20.272632</td>
+<td>19.022802</td>
+<td>14.214302</td>
+<td>13.600103</td>
+<td>12.571558</td>
+<td>8.726295</td>
+<td>8.287380</td>
+<td>9.577514</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Heroku</th>
+<td>0.444998</td>
+<td>3.562827</td>
+<td>4.499964</td>
+<td>7.652733</td>
+<td>9.496157</td>
+<td>13.917370</td>
+<td>15.425584</td>
+<td>8.938179</td>
+<td>6.802344</td>
+<td>4.817393</td>
+<td>5.027828</td>
+<td>3.123567</td>
+<td>2.859682</td>
+<td>3.631569</td>
+<td>3.075446</td>
+<td>6.218739</td>
+<td>2.174256</td>
+<td>2.554004</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Bitcoin</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.179999</td>
+<td>0.782031</td>
+<td>20.358668</td>
+<td>14.303071</td>
+<td>125.255740</td>
+<td>131.838136</td>
+<td>70.178031</td>
+<td>46.219447</td>
+<td>109.402307</td>
+<td>90.667852</td>
+<td>47.773513</td>
+<td>40.897802</td>
+<td>85.276170</td>
+<td>42.628454</td>
+<td>20.513628</td>
+<td>26.917855</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Go</th>
+<td>52.509790</td>
+<td>49.167011</td>
+<td>48.599611</td>
+<td>43.179292</td>
+<td>43.928266</td>
+<td>50.783937</td>
+<td>70.373137</td>
+<td>77.762155</td>
+<td>86.583684</td>
+<td>107.138826</td>
+<td>92.409862</td>
+<td>93.284895</td>
+<td>85.594211</td>
+<td>86.718939</td>
+<td>77.398713</td>
+<td>80.108059</td>
+<td>72.853317</td>
+<td>77.090586</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Scala</th>
+<td>18.244927</td>
+<td>23.229631</td>
+<td>20.699834</td>
+<td>19.439060</td>
+<td>21.349274</td>
+<td>21.117118</td>
+<td>23.966486</td>
+<td>23.858062</td>
+<td>20.068454</td>
+<td>25.133029</td>
+<td>21.670744</td>
+<td>22.821734</td>
+<td>19.092584</td>
+<td>15.452447</td>
+<td>14.433012</td>
+<td>14.309787</td>
+<td>12.919490</td>
+<td>15.088785</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Docker</th>
+<td>0.000000</td>
+<td>1.425131</td>
+<td>2.609979</td>
+<td>2.290234</td>
+<td>1.878736</td>
+<td>1.799937</td>
+<td>14.353912</td>
+<td>46.375397</td>
+<td>70.147251</td>
+<td>70.196302</td>
+<td>62.000914</td>
+<td>45.474627</td>
+<td>43.820423</td>
+<td>43.237605</td>
+<td>37.471876</td>
+<td>31.494905</td>
+<td>28.548921</td>
+<td>27.993225</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Microservices</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>4.056558</td>
+<td>14.189505</td>
+<td>18.691486</td>
+<td>17.691501</td>
+<td>15.871095</td>
+<td>12.391956</td>
+<td>12.722677</td>
+<td>8.821673</td>
+<td>6.753684</td>
+<td>6.900898</td>
+<td>4.603928</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">DevOps</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.619922</td>
+<td>2.220325</td>
+<td>3.696299</td>
+<td>7.176956</td>
+<td>12.719716</td>
+<td>15.513038</td>
+<td>20.343164</td>
+<td>18.713199</td>
+<td>15.786674</td>
+<td>12.868570</td>
+<td>14.306919</td>
+<td>10.979880</td>
+<td>6.920855</td>
+<td>7.247519</td>
+<td>4.032637</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Deep Learning</th>
+<td>0.889996</td>
+<td>1.710157</td>
+<td>2.159983</td>
+<td>0.949609</td>
+<td>1.127242</td>
+<td>1.542803</td>
+<td>3.832040</td>
+<td>9.075689</td>
+<td>24.593091</td>
+<td>42.503173</td>
+<td>64.877800</td>
+<td>54.451364</td>
+<td>51.894820</td>
+<td>33.878394</td>
+<td>25.817556</td>
+<td>20.160751</td>
+<td>20.387585</td>
+<td>15.693681</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">AWS</th>
+<td>6.229975</td>
+<td>10.118428</td>
+<td>7.649939</td>
+<td>7.261718</td>
+<td>9.940222</td>
+<td>15.170898</td>
+<td>16.627156</td>
+<td>22.895489</td>
+<td>30.564379</td>
+<td>40.300936</td>
+<td>52.267900</td>
+<td>53.804138</td>
+<td>51.838748</td>
+<td>51.792508</td>
+<td>52.147686</td>
+<td>37.981116</td>
+<td>31.668505</td>
+<td>29.639885</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Machine Learning</th>
+<td>3.114988</td>
+<td>1.282618</td>
+<td>4.589963</td>
+<td>4.468749</td>
+<td>5.397096</td>
+<td>7.810441</td>
+<td>10.034748</td>
+<td>14.576107</td>
+<td>23.638916</td>
+<td>40.823967</td>
+<td>55.601861</td>
+<td>62.415052</td>
+<td>53.016264</td>
+<td>49.184603</td>
+<td>36.743481</td>
+<td>26.011715</td>
+<td>19.253190</td>
+<td>16.802656</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Blockchain</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.034159</td>
+<td>0.032142</td>
+<td>1.169097</td>
+<td>5.534795</td>
+<td>15.389919</td>
+<td>29.757726</td>
+<td>60.172613</td>
+<td>93.735138</td>
+<td>43.820423</td>
+<td>17.938488</td>
+<td>28.542293</td>
+<td>22.400835</td>
+<td>8.413424</td>
+<td>6.385009</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Serverless</th>
+<td>1.334995</td>
+<td>0.570052</td>
+<td>0.179999</td>
+<td>0.391016</td>
+<td>0.341588</td>
+<td>0.385701</td>
+<td>0.454649</td>
+<td>0.412531</td>
+<td>1.538992</td>
+<td>11.837023</td>
+<td>22.074046</td>
+<td>31.629629</td>
+<td>28.737002</td>
+<td>23.519892</td>
+<td>19.208046</td>
+<td>16.081793</td>
+<td>11.406964</td>
+<td>10.921727</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Python</th>
+<td>50.284799</td>
+<td>81.089940</td>
+<td>67.229462</td>
+<td>56.138665</td>
+<td>48.676345</td>
+<td>64.090614</td>
+<td>79.823336</td>
+<td>73.052422</td>
+<td>72.147940</td>
+<td>77.215932</td>
+<td>85.499960</td>
+<td>86.643798</td>
+<td>93.612536</td>
+<td>102.731963</td>
+<td>93.882022</td>
+<td>77.299596</td>
+<td>77.863558</td>
+<td>75.981611</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Kubernetes</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.753258</td>
+<td>5.417251</td>
+<td>15.085323</td>
+<td>31.860834</td>
+<td>41.816396</td>
+<td>48.866921</td>
+<td>50.135148</td>
+<td>35.988108</td>
+<td>28.151497</td>
+<td>22.026154</td>
+<td>22.078690</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">NFT</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.032142</td>
+<td>0.000000</td>
+<td>0.034378</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.026887</td>
+<td>0.337683</td>
+<td>0.112144</td>
+<td>0.268102</td>
+<td>30.700500</td>
+<td>24.105973</td>
+<td>3.655270</td>
+<td>1.411423</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Web3</th>
+<td>11.124956</td>
+<td>5.415497</td>
+<td>1.709986</td>
+<td>1.173047</td>
+<td>0.785653</td>
+<td>0.289276</td>
+<td>0.292274</td>
+<td>0.309398</td>
+<td>0.061560</td>
+<td>0.192696</td>
+<td>0.510849</td>
+<td>1.463292</td>
+<td>1.598058</td>
+<td>1.023664</td>
+<td>8.551897</td>
+<td>25.443336</td>
+<td>6.333701</td>
+<td>2.520398</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">TypeScript</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.735654</td>
+<td>2.403144</td>
+<td>1.959524</td>
+<td>4.432297</td>
+<td>6.551655</td>
+<td>11.023580</td>
+<td>12.831949</td>
+<td>17.354345</td>
+<td>17.134180</td>
+<td>16.402376</td>
+<td>16.148661</td>
+<td>18.465417</td>
+<td>14.282258</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">GPT</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.089999</td>
+<td>0.000000</td>
+<td>0.034159</td>
+<td>0.128567</td>
+<td>0.064950</td>
+<td>0.034378</td>
+<td>0.000000</td>
+<td>0.082584</td>
+<td>0.000000</td>
+<td>0.028140</td>
+<td>3.868982</td>
+<td>16.451738</td>
+<td>11.978051</td>
+<td>20.695696</td>
+<td>100.803529</td>
+<td>41.065692</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">ChatGPT</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>28.887046</td>
+<td>195.935087</td>
+<td>60.489562</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Transformer</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.161321</td>
+<td>0.084421</td>
+<td>0.252325</td>
+<td>0.365594</td>
+<td>0.458619</td>
+<td>0.167170</td>
+<td>1.228927</td>
+<td>0.604896</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Substack</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.129900</td>
+<td>0.034378</td>
+<td>0.092340</td>
+<td>0.055056</td>
+<td>0.000000</td>
+<td>0.112561</td>
+<td>0.476614</td>
+<td>2.534786</td>
+<td>5.287608</td>
+<td>4.012090</td>
+<td>5.419883</td>
+<td>3.831006</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Rust</th>
+<td>0.000000</td>
+<td>0.427539</td>
+<td>0.000000</td>
+<td>0.670312</td>
+<td>0.341588</td>
+<td>2.185638</td>
+<td>5.195986</td>
+<td>13.407268</td>
+<td>17.052030</td>
+<td>19.379685</td>
+<td>24.493856</td>
+<td>28.871886</td>
+<td>38.829998</td>
+<td>56.642724</td>
+<td>59.512569</td>
+<td>70.880252</td>
+<td>73.452025</td>
+<td>76.754533</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">LLM</th>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.055859</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.027528</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.056072</td>
+<td>0.170611</td>
+<td>0.782350</td>
+<td>4.480167</td>
+<td>80.384434</td>
+<td>105.856734</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
 </div>
 </section>
 <section id="the-headline-heatmap" class="level2">
 <h2 class="anchored" data-anchor-id="the-headline-heatmap">The headline heatmap</h2>
-<div id="cell-10" class="cell">
+<div id="cell-10" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> hype_heatmap(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    freq_norm,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Technology Hype Cycles on Hacker News (2007–2024)</span><span class="ch">\n</span><span class="st">Mentions per 10,000 stories'</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_hype_heatmap.png'</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Key patterns to look for:'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Bitcoin/Blockchain peak: 2017–2018'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - ChatGPT/LLM spike: 2023 onward'</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Heroku flatline after 2022 (Salesforce killed free tier)'</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Ruby decline: post-2014'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> hype_heatmap(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    freq_norm,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Technology Hype Cycles on Hacker News (2007–2024)</span><span class="ch">\n</span><span class="st">Mentions per 10,000 stories'</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_hype_heatmap.png'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Key patterns to look for:'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Bitcoin/Blockchain peak: 2017–2018'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - ChatGPT/LLM spike: 2023 onward'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Heroku flatline after 2022 (Salesforce killed free tier)'</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'  - Ruby decline: post-2014'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Key patterns to look for:
+  - Bitcoin/Blockchain peak: 2017–2018
+  - ChatGPT/LLM spike: 2023 onward
+  - Heroku flatline after 2022 (Salesforce killed free tier)
+  - Ruby decline: post-2014</code></pre>
+</div>
 </div>
 </section>
 <section id="ai-discourse-timeline-the-chatgpt-inflection" class="level2">
 <h2 class="anchored" data-anchor-id="ai-discourse-timeline-the-chatgpt-inflection">AI discourse timeline — the ChatGPT inflection</h2>
-<div id="cell-12" class="cell">
+<div id="cell-12" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ai_cols <span class="op">=</span> [<span class="st">'kw_Machine Learning'</span>, <span class="st">'kw_Deep Learning'</span>, <span class="st">'kw_GPT'</span>, <span class="st">'kw_ChatGPT'</span>, <span class="st">'kw_LLM'</span>]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ai_monthly <span class="op">=</span> con.execute(<span class="st">"""</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">        DATE_TRUNC('month', posted_at) AS month,</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">        COUNT(*) AS total</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM stories</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE YEAR(posted_at) &gt;= 2015</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY 1</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY 1</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>).df()</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add monthly AI keyword counts</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ai_stories <span class="op">=</span> stories[stories[<span class="st">'year'</span>] <span class="op">&gt;=</span> <span class="dv">2015</span>].copy()</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># (simplified: use the tagged dataframe we already have)</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>))</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kw <span class="kw">in</span> [<span class="st">'Machine Learning'</span>, <span class="st">'Deep Learning'</span>, <span class="st">'GPT'</span>, <span class="st">'ChatGPT'</span>, <span class="st">'LLM'</span>, <span class="st">'Transformer'</span>]:</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> <span class="ss">f'kw_</span><span class="sc">{</span>kw<span class="sc">}</span><span class="ss">'</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> stories.columns:</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    monthly <span class="op">=</span> stories[stories[<span class="st">'year'</span>] <span class="op">&gt;=</span> <span class="dv">2015</span>].groupby(<span class="st">'year'</span>)[col].<span class="bu">sum</span>()</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    ax.plot(monthly.index, monthly.values, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>kw, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">4</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">2022.9</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'ChatGPT launch (Nov 2022)'</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'AI / ML discourse on Hacker News (2015–2024)'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Stories mentioning keyword'</span>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'../data/fig_ai_timeline.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ai_cols <span class="op">=</span> [<span class="st">'kw_Machine Learning'</span>, <span class="st">'kw_Deep Learning'</span>, <span class="st">'kw_GPT'</span>, <span class="st">'kw_ChatGPT'</span>, <span class="st">'kw_LLM'</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ai_monthly <span class="op">=</span> con.execute(<span class="st">"""</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">        DATE_TRUNC('month', posted_at) AS month,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">        COUNT(*) AS total</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM stories</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE YEAR(posted_at) &gt;= 2015</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY 1</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY 1</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>).df()</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add monthly AI keyword counts</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ai_stories <span class="op">=</span> stories[stories[<span class="st">'year'</span>] <span class="op">&gt;=</span> <span class="dv">2015</span>].copy()</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># (simplified: use the tagged dataframe we already have)</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kw <span class="kw">in</span> [<span class="st">'Machine Learning'</span>, <span class="st">'Deep Learning'</span>, <span class="st">'GPT'</span>, <span class="st">'ChatGPT'</span>, <span class="st">'LLM'</span>, <span class="st">'Transformer'</span>]:</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    col <span class="op">=</span> <span class="ss">f'kw_</span><span class="sc">{</span>kw<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> stories.columns:</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    monthly <span class="op">=</span> stories[stories[<span class="st">'year'</span>] <span class="op">&gt;=</span> <span class="dv">2015</span>].groupby(<span class="st">'year'</span>)[col].<span class="bu">sum</span>()</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    ax.plot(monthly.index, monthly.values, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>kw, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">2022.9</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'ChatGPT launch (Nov 2022)'</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'AI / ML discourse on Hacker News (2015–2024)'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Stories mentioning keyword'</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'../data/fig_ai_timeline.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_hype_cycles_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="x-is-dead-technology-obituaries" class="level2">
 <h2 class="anchored" data-anchor-id="x-is-dead-technology-obituaries">“X is dead” — technology obituaries</h2>
-<div id="cell-14" class="cell">
+<div id="cell-14" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>dead_pattern <span class="op">=</span> <span class="vs">r'</span><span class="dv">\b</span><span class="kw">(</span><span class="vs">is dead</span><span class="cf">|</span><span class="vs">is dying</span><span class="cf">|</span><span class="vs">is over</span><span class="cf">|</span><span class="vs">killed</span><span class="cf">|</span><span class="vs">deprecated</span><span class="cf">|</span><span class="vs">sunsetting</span><span class="kw">)</span><span class="dv">\b</span><span class="vs">'</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>obituaries <span class="op">=</span> stories[stories[<span class="st">'title'</span>].<span class="bu">str</span>.contains(dead_pattern, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>, regex<span class="op">=</span><span class="va">True</span>)]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(obituaries)<span class="sc">:,}</span><span class="ss"> obituary posts found'</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>obit_by_year <span class="op">=</span> obituaries.groupby(<span class="st">'year'</span>).size()</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.bar(obit_by_year.index, obit_by_year.values, color<span class="op">=</span><span class="st">'#555'</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'"X is dead / dying" posts on HN per year'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Posts'</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'../data/fig_obituaries.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">Top obituary titles:'</span>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(obituaries.nlargest(<span class="dv">20</span>, <span class="st">'score'</span>)[[<span class="st">'title'</span>, <span class="st">'year'</span>, <span class="st">'score'</span>]].to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>dead_pattern <span class="op">=</span> <span class="vs">r'</span><span class="dv">\b</span><span class="kw">(</span><span class="vs">is dead</span><span class="cf">|</span><span class="vs">is dying</span><span class="cf">|</span><span class="vs">is over</span><span class="cf">|</span><span class="vs">killed</span><span class="cf">|</span><span class="vs">deprecated</span><span class="cf">|</span><span class="vs">sunsetting</span><span class="kw">)</span><span class="dv">\b</span><span class="vs">'</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>obituaries <span class="op">=</span> stories[stories[<span class="st">'title'</span>].<span class="bu">str</span>.contains(dead_pattern, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>, regex<span class="op">=</span><span class="va">True</span>)]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(obituaries)<span class="sc">:,}</span><span class="ss"> obituary posts found'</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>obit_by_year <span class="op">=</span> obituaries.groupby(<span class="st">'year'</span>).size()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>ax.bar(obit_by_year.index, obit_by_year.values, color<span class="op">=</span><span class="st">'#555'</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'"X is dead / dying" posts on HN per year'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Posts'</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'../data/fig_obituaries.png'</span>, dpi<span class="op">=</span><span class="dv">150</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">Top obituary titles:'</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(obituaries.nlargest(<span class="dv">20</span>, <span class="st">'score'</span>)[[<span class="st">'title'</span>, <span class="st">'year'</span>, <span class="st">'score'</span>]].to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/4j/zr7sj26s4y133367d5fl89540000gn/T/ipykernel_40412/906153741.py:4: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  obituaries = stories[stories['title'].str.contains(dead_pattern, case=False, na=False, regex=True)]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>8,645 obituary posts found</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02_hype_cycles_files/figure-html/cell-8-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Top obituary titles:
+                                                                         title  year  score
+                                                        Google Search Is Dying  2022   3636
+                                             The man who killed Google Search?  2024   1884
+                                                           Sunsetting Python 2  2019   1616
+                                             "DigitalOcean Killed Our Company"  2019   1343
+                                                               Sunsetting Atom  2022   1320
+                                              Apollo is dead. Long live Apollo  2023   1036
+                                                       Osama bin Laden Is Dead  2011    924
+                                                              Big data is dead  2023    879
+Atta Elayyan, Developer of MetroTube and LazyWorm Apps, Killed in Christchurch  2019    871
+                Jeff Bezos killed Washington Post endorsement of Kamala Harris  2024    825
+                                              Who Killed the Junior Developer?  2018    803
+                 My dog was killed on a walk with a walker ordered through Wag  2019    775
+                          After 15 Years, the Pirate Bay Still Can’t Be Killed  2019    775
+                 Oculus Rift co-founder killed by gang trying to escape police  2013    726
+LAPD Officer Killed During Training Exercise Was Investigating Cops About Rape  2022    712
+                                             The Drone that Killed my Grandson  2013    708
+                                           Whitespace killed an enterprise app  2019    708
+                                        How to Tell a Mother Her Child Is Dead  2016    694
+           The Outer Worlds: Fixing the “game thinks my companion is dead” bug  2019    676
+                              “MP3 is dead” missed the real, much better story  2017    650</code></pre>
+</div>
 </div>
 
 
@@ -446,7 +1140,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/Zascosium\.github\.io\/hackermining\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

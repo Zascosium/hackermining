@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
 
 </head>
@@ -207,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>What separates a 500-point story from one that gets 3 points and dies? We analyse title features, timing, and metadata to find the real predictors.</p>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -225,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> db()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-3" class="cell">
+<div id="cell-3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stories <span class="op">=</span> con.execute(<span class="st">"""</span></span>
@@ -247,87 +251,282 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'domain'</span>] <span class="op">=</span> stories[<span class="st">'url'</span>].<span class="bu">apply</span>(extract_domain)</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(stories)<span class="sc">:,}</span><span class="ss"> stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"8b184f72b012489da0f309ad665ee1c5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4,850,353 stories</code></pre>
+</div>
 </div>
 <section id="when-to-post-score-by-hour-day-of-week" class="level2">
 <h2 class="anchored" data-anchor-id="when-to-post-score-by-hour-day-of-week">When to post: score by hour × day-of-week</h2>
-<div id="cell-5" class="cell">
+<div id="cell-5" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pivot <span class="op">=</span> stories.groupby([<span class="st">'dow'</span>, <span class="st">'hour_utc'</span>])[<span class="st">'score'</span>].median().unstack()</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pivot.index <span class="op">=</span> [<span class="st">'Sun'</span>, <span class="st">'Mon'</span>, <span class="st">'Tue'</span>, <span class="st">'Wed'</span>, <span class="st">'Thu'</span>, <span class="st">'Fri'</span>, <span class="st">'Sat'</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> heatmap_2d(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    pivot,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median story score by day-of-week and hour (UTC)'</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Hour (UTC)'</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">'Day of week'</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_timing_heatmap.png'</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>best_hour <span class="op">=</span> pivot.values.flatten().argmax()</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Best slot: </span><span class="sc">{</span>pivot<span class="sc">.</span>stack()<span class="sc">.</span>idxmax()<span class="sc">}</span><span class="ss"> UTC'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pivot <span class="op">=</span> stories.groupby([<span class="st">'dow'</span>, <span class="st">'hour_utc'</span>])[<span class="st">'score'</span>].median().unstack()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pivot.index <span class="op">=</span> [<span class="st">'Sun'</span>, <span class="st">'Mon'</span>, <span class="st">'Tue'</span>, <span class="st">'Wed'</span>, <span class="st">'Thu'</span>, <span class="st">'Fri'</span>, <span class="st">'Sat'</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> heatmap_2d(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    pivot,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median story score by day-of-week and hour (UTC)'</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Hour (UTC)'</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">'Day of week'</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_timing_heatmap.png'</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>best_hour <span class="op">=</span> pivot.values.flatten().argmax()</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Best slot: </span><span class="sc">{</span>pivot<span class="sc">.</span>stack()<span class="sc">.</span>idxmax()<span class="sc">}</span><span class="ss"> UTC'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best slot: ('Sun', np.int64(0)) UTC</code></pre>
+</div>
 </div>
 </section>
 <section id="title-length-vs-score" class="level2">
 <h2 class="anchored" data-anchor-id="title-length-vs-score">Title length vs score</h2>
-<div id="cell-7" class="cell">
+<div id="cell-7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> pd.cut(stories[<span class="st">'title_len_words'</span>], bins<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">11</span>,<span class="dv">14</span>,<span class="dv">17</span>,<span class="dv">30</span>], labels<span class="op">=</span>[<span class="st">'1–5'</span>,<span class="st">'6–8'</span>,<span class="st">'9–11'</span>,<span class="st">'12–14'</span>,<span class="st">'15–17'</span>,<span class="st">'18+'</span>])</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>length_score <span class="op">=</span> stories.groupby(bins, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'score'</span>].median().reset_index()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>length_score.columns <span class="op">=</span> [<span class="st">'title_words'</span>, <span class="st">'median_score'</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> bar_chart(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(length_score[<span class="st">'title_words'</span>].astype(<span class="bu">str</span>)),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(length_score[<span class="st">'median_score'</span>]),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median score by title word count'</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Median score'</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    horizontal<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_title_length.png'</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> pd.cut(stories[<span class="st">'title_len_words'</span>], bins<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">8</span>,<span class="dv">11</span>,<span class="dv">14</span>,<span class="dv">17</span>,<span class="dv">30</span>], labels<span class="op">=</span>[<span class="st">'1–5'</span>,<span class="st">'6–8'</span>,<span class="st">'9–11'</span>,<span class="st">'12–14'</span>,<span class="st">'15–17'</span>,<span class="st">'18+'</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>length_score <span class="op">=</span> stories.groupby(bins, observed<span class="op">=</span><span class="va">True</span>)[<span class="st">'score'</span>].median().reset_index()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>length_score.columns <span class="op">=</span> [<span class="st">'title_words'</span>, <span class="st">'median_score'</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> bar_chart(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(length_score[<span class="st">'title_words'</span>].astype(<span class="bu">str</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(length_score[<span class="st">'median_score'</span>]),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median score by title word count'</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Median score'</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    horizontal<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_title_length.png'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
 <section id="questions-vs-statements-vs-numbers" class="level2">
 <h2 class="anchored" data-anchor-id="questions-vs-statements-vs-numbers">Questions vs statements vs numbers</h2>
-<div id="cell-9" class="cell">
+<div id="cell-9" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>feature_scores <span class="op">=</span> {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Question (ends with ?)'</span>: stories[stories[<span class="st">'title_is_question'</span>]][<span class="st">'score'</span>].median(),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Contains a number'</span>: stories[stories[<span class="st">'title_has_number'</span>]][<span class="st">'score'</span>].median(),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Positive sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>] <span class="op">&gt;</span> <span class="fl">0.1</span>][<span class="st">'score'</span>].median(),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Negative sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>] <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.1</span>][<span class="st">'score'</span>].median(),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Neutral sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>].between(<span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>)][<span class="st">'score'</span>].median(),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'All stories (baseline)'</span>: stories[<span class="st">'score'</span>].median(),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> bar_chart(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(feature_scores.keys()),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(feature_scores.values()),</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median score by title feature'</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Median score'</span>,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_title_features.png'</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>feature_scores <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Question (ends with ?)'</span>: stories[stories[<span class="st">'title_is_question'</span>]][<span class="st">'score'</span>].median(),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Contains a number'</span>: stories[stories[<span class="st">'title_has_number'</span>]][<span class="st">'score'</span>].median(),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Positive sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>] <span class="op">&gt;</span> <span class="fl">0.1</span>][<span class="st">'score'</span>].median(),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Negative sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>] <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.1</span>][<span class="st">'score'</span>].median(),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Neutral sentiment'</span>: stories[stories[<span class="st">'title_sentiment'</span>].between(<span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>)][<span class="st">'score'</span>].median(),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'All stories (baseline)'</span>: stories[<span class="st">'score'</span>].median(),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> bar_chart(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(feature_scores.keys()),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">list</span>(feature_scores.values()),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Median score by title feature'</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">'Median score'</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_title_features.png'</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
 <section id="discussion-maximizers-high-comments-low-score" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-maximizers-high-comments-low-score">Discussion maximizers: high comments, low score</h2>
-<div id="cell-11" class="cell">
+<div id="cell-11" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>controversy <span class="op">=</span> stories.dropna(subset<span class="op">=</span>[<span class="st">'comment_count'</span>]).copy()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>controversy[<span class="st">'controversy_ratio'</span>] <span class="op">=</span> controversy[<span class="st">'comment_count'</span>] <span class="op">/</span> (controversy[<span class="st">'score'</span>] <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Top 20 discussion-maximizing posts (most comments relative to score):'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>top_controversial <span class="op">=</span> controversy.nlargest(<span class="dv">20</span>, <span class="st">'controversy_ratio'</span>)[[<span class="st">'title'</span>, <span class="st">'year'</span>, <span class="st">'score'</span>, <span class="st">'comment_count'</span>, <span class="st">'controversy_ratio'</span>]]</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>display(top_controversial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>controversy <span class="op">=</span> stories.dropna(subset<span class="op">=</span>[<span class="st">'comment_count'</span>]).copy()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>controversy[<span class="st">'controversy_ratio'</span>] <span class="op">=</span> controversy[<span class="st">'comment_count'</span>] <span class="op">/</span> (controversy[<span class="st">'score'</span>] <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Top 20 discussion-maximizing posts (most comments relative to score):'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>top_controversial <span class="op">=</span> controversy.nlargest(<span class="dv">20</span>, <span class="st">'controversy_ratio'</span>)[[<span class="st">'title'</span>, <span class="st">'year'</span>, <span class="st">'score'</span>, <span class="st">'comment_count'</span>, <span class="st">'controversy_ratio'</span>]]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>display(top_controversial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 20 discussion-maximizing posts (most comments relative to score):</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">score</th>
+<th data-quarto-table-cell-role="th">comment_count</th>
+<th data-quarto-table-cell-role="th">controversy_ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1665655</th>
+<td>The DevOps Democracy</td>
+<td>2015</td>
+<td>-1</td>
+<td>1</td>
+<td>inf</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">173896</th>
+<td>Ask HN: Which of These Have You Read?</td>
+<td>2010</td>
+<td>3</td>
+<td>101</td>
+<td>25.25</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3667575</th>
+<td>Why Do I Exist?</td>
+<td>2021</td>
+<td>1</td>
+<td>45</td>
+<td>22.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4036550</th>
+<td>The Demise of the Mildly Dynamic Website</td>
+<td>2022</td>
+<td>4</td>
+<td>91</td>
+<td>18.2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2085640</th>
+<td>We changed our apply page to no longer allow s...</td>
+<td>2017</td>
+<td>2</td>
+<td>52</td>
+<td>17.333333</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">107489</th>
+<td>Trouble with logarithms and partial fractions</td>
+<td>2010</td>
+<td>2</td>
+<td>47</td>
+<td>15.666667</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3811590</th>
+<td>If you were running a country, when will you i...</td>
+<td>2021</td>
+<td>2</td>
+<td>43</td>
+<td>14.333333</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3230118</th>
+<td>Ask HN: Interesting sci-fi movies BY TOPIC?</td>
+<td>2020</td>
+<td>3</td>
+<td>57</td>
+<td>14.25</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4464718</th>
+<td>Paper checks are dead. Cash is dying. Who stil...</td>
+<td>2023</td>
+<td>1</td>
+<td>27</td>
+<td>13.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4284494</th>
+<td>Ask HN: Is Adobe Podcast Audio Enhancer Curren...</td>
+<td>2023</td>
+<td>1</td>
+<td>26</td>
+<td>13.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4286368</th>
+<td>Ask HN: macOS apps/utils you can’t live without?</td>
+<td>2023</td>
+<td>1</td>
+<td>26</td>
+<td>13.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3535795</th>
+<td>Waypoints – How to Find Backtracking</td>
+<td>2020</td>
+<td>1</td>
+<td>25</td>
+<td>12.5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2004020</th>
+<td>Conspiracy theory for the day</td>
+<td>2016</td>
+<td>1</td>
+<td>24</td>
+<td>12.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4061751</th>
+<td>Questions on Delusional Thinking</td>
+<td>2022</td>
+<td>1</td>
+<td>24</td>
+<td>12.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">764311</th>
+<td>Facebook Code Details "Ordered Friends"</td>
+<td>2012</td>
+<td>2</td>
+<td>34</td>
+<td>11.333333</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4481772</th>
+<td>Ask HN: Can the US take in all Israelis and Uk...</td>
+<td>2023</td>
+<td>2</td>
+<td>33</td>
+<td>11.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4567759</th>
+<td>Ask HN: What's the Secret to Ranking on HN?</td>
+<td>2024</td>
+<td>2</td>
+<td>32</td>
+<td>10.666667</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1150598</th>
+<td>Free invites to Atom, GitHub's new text editor</td>
+<td>2014</td>
+<td>15</td>
+<td>170</td>
+<td>10.625</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">188366</th>
+<td>Seeking alpha testers for Beepl</td>
+<td>2011</td>
+<td>1</td>
+<td>21</td>
+<td>10.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4839511</th>
+<td>Ask HN: Do you carry an old phone when travell...</td>
+<td>2024</td>
+<td>1</td>
+<td>21</td>
+<td>10.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
 </div>
 
 
@@ -407,7 +606,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/Zascosium\.github\.io\/hackermining\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

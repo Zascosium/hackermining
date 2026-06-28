@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -206,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Who owns HN’s front page? We track which domains (news sites, platforms, personal blogs) dominated each era — and how the ecosystem has shifted from individual blogs to corporate publishing platforms and back to newsletters.</p>
-<div id="cell-2" class="cell">
+<div id="cell-2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -224,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> db()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-3" class="cell">
+<div id="cell-3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stories <span class="op">=</span> con.execute(<span class="st">"""</span></span>
@@ -238,67 +241,310 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'domain'</span>] <span class="op">=</span> stories[<span class="st">'url'</span>].<span class="bu">apply</span>(extract_domain)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="bu">len</span>(stories)<span class="sc">:,}</span><span class="ss"> stories with URLs'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>647,183 stories with URLs</code></pre>
+</div>
 </div>
 <section id="top-domains-overall" class="level2">
 <h2 class="anchored" data-anchor-id="top-domains-overall">Top domains overall</h2>
-<div id="cell-5" class="cell">
+<div id="cell-5" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>top_domains <span class="op">=</span> (</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    stories.groupby(<span class="st">'domain'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .agg(n_stories<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>), avg_score<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'mean'</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'n_stories'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">30</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>display(top_domains)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>top_domains <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    stories.groupby(<span class="st">'domain'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .agg(n_stories<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>), avg_score<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'mean'</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'n_stories'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">30</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>display(top_domains)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">n_stories</th>
+<th data-quarto-table-cell-role="th">avg_score</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">domain</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">github.com</th>
+<td>27251</td>
+<td>109.509046</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">nytimes.com</th>
+<td>14592</td>
+<td>78.226905</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">techcrunch.com</th>
+<td>10258</td>
+<td>80.116592</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">medium.com</th>
+<td>9089</td>
+<td>71.799978</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">arstechnica.com</th>
+<td>8888</td>
+<td>71.590347</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">twitter.com</th>
+<td>8612</td>
+<td>107.118672</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">theguardian.com</th>
+<td>8345</td>
+<td>68.299700</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">bloomberg.com</th>
+<td>6845</td>
+<td>97.273192</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">youtube.com</th>
+<td>6699</td>
+<td>68.370802</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">theverge.com</th>
+<td>4952</td>
+<td>72.308966</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">en.wikipedia.org</th>
+<td>4908</td>
+<td>67.594336</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">bbc.com</th>
+<td>4867</td>
+<td>92.934457</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">wired.com</th>
+<td>4542</td>
+<td>71.397182</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">washingtonpost.com</th>
+<td>4473</td>
+<td>79.838587</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">wsj.com</th>
+<td>4404</td>
+<td>78.044278</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">reuters.com</th>
+<td>4309</td>
+<td>104.320260</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">theatlantic.com</th>
+<td>3774</td>
+<td>67.887652</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">bbc.co.uk</th>
+<td>3631</td>
+<td>83.536216</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">economist.com</th>
+<td>2810</td>
+<td>83.006050</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">arxiv.org</th>
+<td>2746</td>
+<td>89.990896</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">nature.com</th>
+<td>2599</td>
+<td>91.322047</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">npr.org</th>
+<td>2577</td>
+<td>102.504075</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">cnbc.com</th>
+<td>2530</td>
+<td>70.964822</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">newyorker.com</th>
+<td>2469</td>
+<td>78.456460</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">businessinsider.com</th>
+<td>2396</td>
+<td>59.752087</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">forbes.com</th>
+<td>2067</td>
+<td>66.734881</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">theregister.com</th>
+<td>1991</td>
+<td>63.873430</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">phys.org</th>
+<td>1825</td>
+<td>65.067945</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">cnn.com</th>
+<td>1688</td>
+<td>53.708531</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">reddit.com</th>
+<td>1591</td>
+<td>101.114393</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
 </div>
 </section>
 <section id="domain-share-over-time-top-10-platforms" class="level2">
 <h2 class="anchored" data-anchor-id="domain-share-over-time-top-10-platforms">Domain share over time (top 10 platforms)</h2>
-<div id="cell-7" class="cell">
+<div id="cell-7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>TRACKED <span class="op">=</span> [</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'github.com'</span>, <span class="st">'medium.com'</span>, <span class="st">'nytimes.com'</span>, <span class="st">'techcrunch.com'</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'arstechnica.com'</span>, <span class="st">'substack.com'</span>, <span class="st">'wired.com'</span>, <span class="st">'bloomberg.com'</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'youtube.com'</span>, <span class="st">'reddit.com'</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>total_per_year <span class="op">=</span> stories.groupby(<span class="st">'year'</span>).size().rename(<span class="st">'total'</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>tracked <span class="op">=</span> stories[stories[<span class="st">'domain'</span>].isin(TRACKED)]</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>pivot <span class="op">=</span> (</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    tracked.groupby([<span class="st">'year'</span>, <span class="st">'domain'</span>]).size()</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    .unstack(fill_value<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    .div(total_per_year, axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>))</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>pivot.plot(ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">2</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">4</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Domain share of HN stories scoring ≥ 10 (</span><span class="sc">% o</span><span class="st">f year total)'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Share (%)'</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>, fontsize<span class="op">=</span><span class="dv">8</span>, ncol<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_domain_share.png'</span>)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>TRACKED <span class="op">=</span> [</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'github.com'</span>, <span class="st">'medium.com'</span>, <span class="st">'nytimes.com'</span>, <span class="st">'techcrunch.com'</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'arstechnica.com'</span>, <span class="st">'substack.com'</span>, <span class="st">'wired.com'</span>, <span class="st">'bloomberg.com'</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'youtube.com'</span>, <span class="st">'reddit.com'</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>total_per_year <span class="op">=</span> stories.groupby(<span class="st">'year'</span>).size().rename(<span class="st">'total'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>tracked <span class="op">=</span> stories[stories[<span class="st">'domain'</span>].isin(TRACKED)]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>pivot <span class="op">=</span> (</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    tracked.groupby([<span class="st">'year'</span>, <span class="st">'domain'</span>]).size()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    .unstack(fill_value<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    .div(total_per_year, axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>pivot.plot(ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">2</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Domain share of HN stories scoring ≥ 10 (</span><span class="sc">% o</span><span class="st">f year total)'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Share (%)'</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>, fontsize<span class="op">=</span><span class="dv">8</span>, ncol<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_domain_share.png'</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
 <section id="top-10-domains-per-year-ranked-table" class="level2">
 <h2 class="anchored" data-anchor-id="top-10-domains-per-year-ranked-table">Top 10 domains per year (ranked table)</h2>
-<div id="cell-9" class="cell">
+<div id="cell-9" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> [<span class="dv">2010</span>, <span class="dv">2015</span>, <span class="dv">2018</span>, <span class="dv">2021</span>, <span class="dv">2024</span>]:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> (</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        stories[stories[<span class="st">'year'</span>] <span class="op">==</span> year]</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        .groupby(<span class="st">'domain'</span>).size()</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        .head(<span class="dv">10</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">=== </span><span class="sc">{</span>year<span class="sc">}</span><span class="ss"> ==='</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(top.to_string())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> [<span class="dv">2010</span>, <span class="dv">2015</span>, <span class="dv">2018</span>, <span class="dv">2021</span>, <span class="dv">2024</span>]:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> (</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        stories[stories[<span class="st">'year'</span>] <span class="op">==</span> year]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        .groupby(<span class="st">'domain'</span>).size()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        .head(<span class="dv">10</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">=== </span><span class="sc">{</span>year<span class="sc">}</span><span class="ss"> ==='</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(top.to_string())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== 2010 ===
+domain
+techcrunch.com      814
+nytimes.com         577
+youtube.com         295
+wired.com           269
+arstechnica.com     257
+github.com          249
+online.wsj.com      232
+readwriteweb.com    169
+en.wikipedia.org    163
+google.com          133
+
+=== 2015 ===
+domain
+github.com            2126
+medium.com            1298
+nytimes.com           1256
+techcrunch.com         704
+theguardian.com        543
+washingtonpost.com     468
+bbc.com                436
+arstechnica.com        400
+wired.com              391
+bloomberg.com          387
+
+=== 2018 ===
+domain
+github.com         1745
+nytimes.com        1351
+medium.com         1127
+bloomberg.com       801
+theguardian.com     747
+techcrunch.com      614
+arstechnica.com     606
+youtube.com         435
+bbc.com             421
+theverge.com        396
+
+=== 2021 ===
+domain
+github.com          2380
+twitter.com         1508
+nytimes.com          941
+theguardian.com      939
+arstechnica.com      760
+youtube.com          680
+reuters.com          651
+bbc.com              643
+en.wikipedia.org     535
+theverge.com         529
+
+=== 2024 ===
+domain
+github.com         3202
+arstechnica.com    1042
+theguardian.com    1036
+twitter.com         935
+youtube.com         859
+nytimes.com         756
+theregister.com     659
+theverge.com        645
+wsj.com             555
+bloomberg.com       541</code></pre>
+</div>
 </div>
 
 
@@ -378,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/Zascosium\.github\.io\/hackermining\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
