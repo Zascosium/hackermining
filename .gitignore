@@ -31,3 +31,5 @@ venv/
 
 # Misc
 .DS_Store
+
+**/*.quarto_ipynb

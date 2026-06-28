@@ -42,13 +42,29 @@ hackermining/
 
 ---
 
+## Setup
+
+### Prerequisites
+
+- **Python 3.11+**
+- **Google Cloud SDK** (required for BigQuery access)
+  ```bash
+  # macOS
+  brew install google-cloud-sdk
+  
+  # Other systems: https://cloud.google.com/sdk/docs/install
+  ```
+
+---
+
 ## Quick start
 
 ```bash
-# 1. Install dependencies
+# 1. Install Python dependencies
 pip install -e .
 
 # 2. Set up GCP access
+gcloud init
 gcloud auth application-default login
 cp .env.example .env
 # Set GCP_PROJECT_ID in .env
