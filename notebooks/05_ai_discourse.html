@@ -210,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>How did the HN community’s relationship with AI evolve? From sceptical blog posts about “neural networks” in 2012, through the deep learning excitement of 2016, to the ChatGPT earthquake of November 2022 — quantified.</p>
-<div id="cell-2" class="cell" data-execution_count="1">
+<div id="e65157e9" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> db()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cell-3" class="cell" data-execution_count="2">
+<div id="9a842fdb" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stories <span class="op">=</span> con.execute(<span class="st">"""</span></span>
@@ -248,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ffbac63ae9804898b209ee3667c35fd0","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"8d292ee865c64b24bcdc22641ead983b","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-stdout">
@@ -257,100 +257,117 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="monthly-ai-story-volume-the-chatgpt-inflection" class="level2">
 <h2 class="anchored" data-anchor-id="monthly-ai-story-volume-the-chatgpt-inflection">Monthly AI story volume — the ChatGPT inflection</h2>
-<div id="cell-5" class="cell" data-execution_count="3">
+<div id="c54a2361" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>AI_TERMS <span class="op">=</span> {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Machine Learning'</span>: [<span class="vs">r'machine learning'</span>, <span class="vs">r'</span><span class="dv">\b</span><span class="vs">ml</span><span class="dv">\b</span><span class="vs">'</span>],</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Deep Learning'</span>: [<span class="st">'deep learning'</span>, <span class="st">'neural network'</span>],</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'GPT / OpenAI'</span>: [<span class="vs">r'</span><span class="dv">\b</span><span class="vs">gpt</span><span class="dv">\b</span><span class="vs">'</span>, <span class="st">'openai'</span>, <span class="st">'gpt-4'</span>, <span class="st">'gpt-3'</span>],</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ChatGPT'</span>: [<span class="st">'chatgpt'</span>],</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'LLM'</span>: [<span class="vs">r'</span><span class="dv">\b</span><span class="vs">llm</span><span class="dv">\b</span><span class="vs">'</span>, <span class="st">'large language model'</span>],</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, patterns <span class="kw">in</span> AI_TERMS.items():</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    stories[label] <span class="op">=</span> stories[<span class="st">'title'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> t: keyword_hits(<span class="bu">str</span>(t), patterns))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>monthly_totals <span class="op">=</span> stories.groupby(<span class="st">'month'</span>).size().rename(<span class="st">'total'</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="bu">len</span>(AI_TERMS), <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">12</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>chatgpt_date <span class="op">=</span> pd.Timestamp(<span class="st">'2022-11-01'</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (label, _) <span class="kw">in</span> <span class="bu">zip</span>(axes, AI_TERMS.items()):</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    monthly <span class="op">=</span> stories.groupby(<span class="st">'month'</span>)[label].<span class="bu">sum</span>()</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    share <span class="op">=</span> (monthly <span class="op">/</span> monthly_totals <span class="op">*</span> <span class="dv">1000</span>).fillna(<span class="dv">0</span>)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    ax.fill_between(share.index, share.values, alpha<span class="op">=</span><span class="fl">0.4</span>, color<span class="op">=</span><span class="st">'#e8604c'</span>)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ax.plot(share.index, share.values, color<span class="op">=</span><span class="st">'#e8604c'</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    ax.axvline(chatgpt_date, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="ss">f'</span><span class="sc">{</span>label<span class="sc">}</span><span class="ch">\n</span><span class="ss">(per 1k stories)'</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Research / paradigms</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Machine Learning'</span>: [<span class="vs">r'machine learning'</span>, <span class="vs">r'</span><span class="dv">\b</span><span class="vs">ml model'</span>],</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Deep Learning'</span>:    [<span class="st">'deep learning'</span>, <span class="st">'neural network'</span>],</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Transformer'</span>:      [<span class="st">'transformer model'</span>, <span class="st">'attention mechanism'</span>],</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Models &amp; products</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'GPT / OpenAI'</span>:     [<span class="vs">r'</span><span class="dv">\b</span><span class="vs">gpt</span><span class="dv">\b</span><span class="vs">'</span>, <span class="st">'gpt-4'</span>, <span class="st">'gpt-3'</span>, <span class="st">'gpt-2'</span>, <span class="st">'openai'</span>],</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'ChatGPT'</span>:          [<span class="st">'chatgpt'</span>],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'LLM'</span>:              [<span class="vs">r'</span><span class="dv">\b</span><span class="vs">llm</span><span class="dv">\b</span><span class="vs">'</span>, <span class="st">'large language model'</span>],</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Claude / Anthropic'</span>: [<span class="st">'anthropic'</span>, <span class="vs">r'</span><span class="dv">\b</span><span class="vs">claude</span><span class="dv">\b</span><span class="vs"> ai'</span>, <span class="st">'claude 3'</span>, <span class="st">'claude 2'</span>],</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Gemini / Google'</span>:  [<span class="st">'gemini'</span>, <span class="st">'google bard'</span>, <span class="vs">r'</span><span class="dv">\b</span><span class="vs">bard</span><span class="dv">\b</span><span class="vs">'</span>],</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Copilot'</span>:          [<span class="st">'github copilot'</span>, <span class="vs">r'</span><span class="dv">\b</span><span class="vs">copilot</span><span class="dv">\b</span><span class="vs">'</span>],</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Stable Diffusion'</span>: [<span class="st">'stable diffusion'</span>, <span class="st">'midjourney'</span>, <span class="vs">r'dall</span><span class="pp">[·-]</span><span class="vs">e'</span>, <span class="st">'imagen'</span>],</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Hugging Face'</span>:     [<span class="st">'hugging face'</span>, <span class="st">'huggingface'</span>],</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Broader terms</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Generative AI'</span>:    [<span class="st">'generative ai'</span>, <span class="st">'gen ai'</span>, <span class="st">'genai'</span>, <span class="st">'foundation model'</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                         <span class="st">'diffusion model'</span>, <span class="st">'text-to-image'</span>, <span class="st">'text to image'</span>],</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'AI (general)'</span>:     [<span class="vs">r'artificial intelligence'</span>],</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, patterns <span class="kw">in</span> AI_TERMS.items():</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    stories[label] <span class="op">=</span> stories[<span class="st">'title'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> t: keyword_hits(<span class="bu">str</span>(t), patterns))</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'is_ai'</span>] <span class="op">=</span> stories[<span class="bu">list</span>(AI_TERMS.keys())].<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'AI discourse on Hacker News (2012–2024)'</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>axes[<span class="op">-</span><span class="dv">1</span>].xaxis.set_major_formatter(mdates.DateFormatter(<span class="st">'%Y'</span>))</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>fig.text(<span class="fl">0.92</span>, <span class="fl">0.5</span>, <span class="st">'← ChatGPT launch'</span>, va<span class="op">=</span><span class="st">'center'</span>, rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_ai_discourse.png'</span>)</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>ai_count <span class="op">=</span> stories[<span class="st">'is_ai'</span>].<span class="bu">sum</span>()</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Stories matching any AI term: </span><span class="sc">{</span>ai_count<span class="sc">:,}</span><span class="ss"> of </span><span class="sc">{</span><span class="bu">len</span>(stories)<span class="sc">:,}</span><span class="ss"> (</span><span class="sc">{</span>ai_count<span class="op">/</span><span class="bu">len</span>(stories)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Stories matching any AI term: 68,299 of 4,377,057 (1.6%)</code></pre>
+</div>
 </div>
 </section>
 <section id="sentiment-of-ai-titles-over-time" class="level2">
 <h2 class="anchored" data-anchor-id="sentiment-of-ai-titles-over-time">Sentiment of AI titles over time</h2>
-<div id="cell-7" class="cell" data-execution_count="4">
+<div id="31b2e948" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ai_stories <span class="op">=</span> stories[stories[<span class="bu">list</span>(AI_TERMS.keys())].<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)].copy()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ai_stories[<span class="st">'sentiment'</span>] <span class="op">=</span> ai_stories[<span class="st">'title'</span>].<span class="bu">apply</span>(sentiment_score)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sentiment_by_year <span class="op">=</span> ai_stories.groupby(<span class="st">'year'</span>)[<span class="st">'sentiment'</span>].mean()</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">'#e8604c'</span> <span class="cf">if</span> v <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">'#4c6de8'</span> <span class="cf">for</span> v <span class="kw">in</span> sentiment_by_year.values]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ax.bar(sentiment_by_year.index, sentiment_by_year.values, color<span class="op">=</span>colors, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Average sentiment of AI-related HN story titles (positive = optimistic)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'VADER compound sentiment'</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_ai_sentiment.png'</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ai_stories <span class="op">=</span> stories[stories[<span class="bu">list</span>(AI_TERMS.keys())].<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)].copy()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ai_stories[<span class="st">'sentiment'</span>] <span class="op">=</span> ai_stories[<span class="st">'title'</span>].<span class="bu">apply</span>(sentiment_score)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sentiment_by_year <span class="op">=</span> ai_stories.groupby(<span class="st">'year'</span>)[<span class="st">'sentiment'</span>].mean()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">'#e8604c'</span> <span class="cf">if</span> v <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">'#4c6de8'</span> <span class="cf">for</span> v <span class="kw">in</span> sentiment_by_year.values]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>ax.bar(sentiment_by_year.index, sentiment_by_year.values, color<span class="op">=</span>colors, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Average sentiment of AI-related HN story titles (positive = optimistic)'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'VADER compound sentiment'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_ai_sentiment.png'</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
 <section id="score-premium-do-ai-stories-get-more-upvotes" class="level2">
 <h2 class="anchored" data-anchor-id="score-premium-do-ai-stories-get-more-upvotes">Score premium: do AI stories get more upvotes?</h2>
-<div id="cell-9" class="cell" data-execution_count="5">
+<div id="8076196a" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'is_ai'</span>] <span class="op">=</span> stories[<span class="bu">list</span>(AI_TERMS.keys())].<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>score_comparison <span class="op">=</span> (</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    stories.groupby([<span class="st">'year'</span>, <span class="st">'is_ai'</span>])[<span class="st">'score'</span>]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    .median()</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    .unstack()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{<span class="va">False</span>: <span class="st">'Non-AI stories'</span>, <span class="va">True</span>: <span class="st">'AI stories'</span>})</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>score_comparison.plot(ax<span class="op">=</span>ax, linewidth<span class="op">=</span><span class="dv">2</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">4</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Median score: AI stories vs all others'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Median score'</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_ai_score_premium.png'</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>premium <span class="op">=</span> score_comparison[<span class="st">'AI stories'</span>] <span class="op">/</span> score_comparison[<span class="st">'Non-AI stories'</span>]</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Score premium of AI stories vs baseline:'</span>)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(premium.tail(<span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'is_ai'</span>] <span class="op">=</span> stories[<span class="bu">list</span>(AI_TERMS.keys())].<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>VIRAL_THRESHOLD <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>viral <span class="op">=</span> stories[stories[<span class="st">'score'</span>] <span class="op">&gt;=</span> VIRAL_THRESHOLD].copy()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>viral_total <span class="op">=</span> viral.groupby(<span class="st">'year'</span>).size().rename(<span class="st">'total_viral'</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>viral_ai <span class="op">=</span> viral[viral[<span class="st">'is_ai'</span>]].groupby(<span class="st">'year'</span>).size().rename(<span class="st">'ai_viral'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>viral_share <span class="op">=</span> (viral_ai <span class="op">/</span> viral_total <span class="op">*</span> <span class="dv">100</span>).fillna(<span class="dv">0</span>).reset_index()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>viral_share.columns <span class="op">=</span> [<span class="st">'year'</span>, <span class="st">'ai_pct_of_viral'</span>]</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>viral_share <span class="op">=</span> viral_share[viral_share[<span class="st">'year'</span>].between(<span class="dv">2015</span>, <span class="dv">2024</span>)]</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'AI stories as % of all stories scoring &gt; </span><span class="sc">{</span>VIRAL_THRESHOLD<span class="sc">}</span><span class="ss"> (2015–2024):'</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(viral_share.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">5</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Left: absolute count of viral AI stories per year</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>ax.bar(viral_share[<span class="st">'year'</span>], viral_ai.reindex(viral_share[<span class="st">'year'</span>]).values, color<span class="op">=</span><span class="st">'#e8604c'</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'Viral AI stories per year</span><span class="ch">\n</span><span class="ss">(score &gt; </span><span class="sc">{</span>VIRAL_THRESHOLD<span class="sc">}</span><span class="ss">)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Story count'</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Right: AI share of all viral content</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>ax.plot(viral_share[<span class="st">'year'</span>], viral_share[<span class="st">'ai_pct_of_viral'</span>], linewidth<span class="op">=</span><span class="fl">2.5</span>, color<span class="op">=</span><span class="st">'#e8604c'</span>, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>ax.fill_between(viral_share[<span class="st">'year'</span>], viral_share[<span class="st">'ai_pct_of_viral'</span>], alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">'#e8604c'</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">2022.9</span>, color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'AI content as % of all viral stories</span><span class="ch">\n</span><span class="ss">(score &gt; </span><span class="sc">{</span>VIRAL_THRESHOLD<span class="sc">}</span><span class="ss">)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'</span><span class="sc">% o</span><span class="st">f viral stories'</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_ai_score_premium.png'</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Score premium of AI stories vs baseline:
-year
-2020    1.0
-2021    0.5
-2022    1.0
-2023    1.0
-2024    1.0
-dtype: float64</code></pre>
+<pre><code>AI stories as % of all stories scoring &gt; 100 (2015–2024):
+ year  ai_pct_of_viral
+ 2015         0.950145
+ 2016         1.943594
+ 2017         1.721196
+ 2018         1.526773
+ 2019         1.217079
+ 2020         0.925046
+ 2021         0.902201
+ 2022         1.608611
+ 2023         5.341063
+ 2024         3.867757</code></pre>
 </div>
 </div>
 

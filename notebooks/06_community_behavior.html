@@ -244,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"26652626b05d48dcb5dd3ac594679afa","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"dd5a8cad9bc0404ea11411f21999c4c0","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -287,8 +287,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Gini coefficient of HN story scores: 0.845
-(0 = perfect equality, 1 = one story gets all points)
-Top 1% of stories (score ≥ 259) capture 32.6% of all points</code></pre>
+(0 = perfect equality, 1 = one story gets all points)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/zascosium/Documents/github_proj_cv/hackermining/notebooks/../src/viz.py:125: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
+  fig.savefig(path, dpi=dpi, bbox_inches="tight", facecolor=BG)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 1% of stories (score ≥ 259) capture 32.6% of all points</code></pre>
 </div>
 </div>
 </section>
@@ -297,21 +303,21 @@ Top 1% of stories (score ≥ 259) capture 32.6% of all points</code></pre>
 <div id="cell-7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Link'</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Ask HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Ask HN'</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Show HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Show HN'</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Tell HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Tell HN'</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>type_stats <span class="op">=</span> (</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    stories.groupby(<span class="st">'post_type'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        count<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        median_score<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'median'</span>),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        median_comments<span class="op">=</span>(<span class="st">'comment_count'</span>, <span class="st">'median'</span>),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>display(type_stats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>stories[<span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Link'</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Ask HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Ask HN'</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Show HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Show HN'</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>stories.loc[stories[<span class="st">'title'</span>].<span class="bu">str</span>.startswith(<span class="st">'Tell HN:'</span>), <span class="st">'post_type'</span>] <span class="op">=</span> <span class="st">'Tell HN'</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>type_stats <span class="op">=</span> (</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    stories.groupby(<span class="st">'post_type'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        count<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        median_score<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'median'</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        median_comments<span class="op">=</span>(<span class="st">'comment_count'</span>, <span class="st">'median'</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>display(type_stats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -369,22 +375,22 @@ Top 1% of stories (score ≥ 259) capture 32.6% of all points</code></pre>
 <div id="cell-9" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>TOP_SCORE <span class="op">=</span> <span class="dv">200</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>power <span class="op">=</span> (</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    stories[stories[<span class="st">'score'</span>] <span class="op">&gt;=</span> TOP_SCORE]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'author'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    .agg(viral_posts<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>), total_points<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'sum'</span>))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'viral_posts'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">25</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.barh(power.index[::<span class="op">-</span><span class="dv">1</span>], power[<span class="st">'viral_posts'</span>][::<span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span><span class="st">'#e8604c'</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'Top submitters of stories scoring ≥ </span><span class="sc">{</span>TOP_SCORE<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Number of high-score posts'</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_power_authors.png'</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>TOP_SCORE <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>power <span class="op">=</span> (</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    stories[stories[<span class="st">'score'</span>] <span class="op">&gt;=</span> TOP_SCORE]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'author'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    .agg(viral_posts<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'count'</span>), total_points<span class="op">=</span>(<span class="st">'score'</span>, <span class="st">'sum'</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'viral_posts'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">25</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ax.barh(power.index[::<span class="op">-</span><span class="dv">1</span>], power[<span class="st">'viral_posts'</span>][::<span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span><span class="st">'#e8604c'</span>, edgecolor<span class="op">=</span><span class="st">'white'</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'Top submitters of stories scoring ≥ </span><span class="sc">{</span>TOP_SCORE<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Number of high-score posts'</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>save(fig, <span class="st">'../data/fig_power_authors.png'</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 

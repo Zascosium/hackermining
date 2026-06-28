@@ -179,10 +179,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#finding-1-technology-life-cycles-are-shockingly-short" id="toc-finding-1-technology-life-cycles-are-shockingly-short" class="nav-link active" data-scroll-target="#finding-1-technology-life-cycles-are-shockingly-short">Finding 1 — Technology life cycles are shockingly short</a></li>
   <li><a href="#finding-2-chatgpt-was-a-10-discontinuity" id="toc-finding-2-chatgpt-was-a-10-discontinuity" class="nav-link" data-scroll-target="#finding-2-chatgpt-was-a-10-discontinuity">Finding 2 — ChatGPT was a 10× discontinuity</a></li>
-  <li><a href="#finding-3-the-best-time-to-post-is-tuesday-10am-utc" id="toc-finding-3-the-best-time-to-post-is-tuesday-10am-utc" class="nav-link" data-scroll-target="#finding-3-the-best-time-to-post-is-tuesday-10am-utc">Finding 3 — The best time to post is Tuesday 10am UTC</a></li>
+  <li><a href="#finding-3-format-beats-content-short-titles-win-questions-lose" id="toc-finding-3-format-beats-content-short-titles-win-questions-lose" class="nav-link" data-scroll-target="#finding-3-format-beats-content-short-titles-win-questions-lose">Finding 3 — Format beats content: short titles win, questions lose</a></li>
   <li><a href="#finding-4-hn-score-inequality-rivals-wealth-inequality" id="toc-finding-4-hn-score-inequality-rivals-wealth-inequality" class="nav-link" data-scroll-target="#finding-4-hn-score-inequality-rivals-wealth-inequality">Finding 4 — HN score inequality rivals wealth inequality</a></li>
   <li><a href="#finding-5-github-replaced-personal-blogs-as-the-default-link-target" id="toc-finding-5-github-replaced-personal-blogs-as-the-default-link-target" class="nav-link" data-scroll-target="#finding-5-github-replaced-personal-blogs-as-the-default-link-target">Finding 5 — GitHub replaced personal blogs as the default link target</a></li>
-  <li><a href="#finding-6-ai-stories-score-2-higher-than-average-since-2023" id="toc-finding-6-ai-stories-score-2-higher-than-average-since-2023" class="nav-link" data-scroll-target="#finding-6-ai-stories-score-2-higher-than-average-since-2023">Finding 6 — AI stories score 2× higher than average since 2023</a></li>
+  <li><a href="#finding-6-ai-content-now-dominates-the-viral-tier" id="toc-finding-6-ai-content-now-dominates-the-viral-tier" class="nav-link" data-scroll-target="#finding-6-ai-content-now-dominates-the-viral-tier">Finding 6 — AI content now dominates the viral tier</a></li>
   <li><a href="#finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content" id="toc-finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content" class="nav-link" data-scroll-target="#finding-7-a-50-user-network-drives-a-disproportionate-share-of-viral-content">Finding 7 — A 50-user network drives a disproportionate share of viral content</a></li>
   </ul>
 </nav>
@@ -232,6 +232,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_hype_heatmap.png'</span>, <span class="st">'Technology hype cycles 2007–2024'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ Technology hype cycles 2007–2024
 </code></pre>
@@ -246,20 +253,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_discourse.png'</span>, <span class="st">'AI discourse monthly, 2012–2024'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ AI discourse monthly, 2012–2024
 </code></pre>
 </div>
 </div>
 </section>
-<section id="finding-3-the-best-time-to-post-is-tuesday-10am-utc" class="level2">
-<h2 class="anchored" data-anchor-id="finding-3-the-best-time-to-post-is-tuesday-10am-utc">Finding 3 — The best time to post is Tuesday 10am UTC</h2>
-<p>Weekend and late-night posts underperform by 30–40% in median score. The scoring sweet spot is weekday mornings in US Eastern time (UTC-5), when the most active voters are just starting their day.</p>
+<section id="finding-3-format-beats-content-short-titles-win-questions-lose" class="level2">
+<h2 class="anchored" data-anchor-id="finding-3-format-beats-content-short-titles-win-questions-lose">Finding 3 — Format beats content: short titles win, questions lose</h2>
+<p>Analysing mean scores on stories with at least 3 points (2015–2024) reveals clear format effects:</p>
+<ul>
+<li><strong>Shorter titles score higher</strong>: 1–5 word titles average 49.5 points; 12–14 word titles average 35.7 — a 38% drop</li>
+<li><strong>Questions underperform significantly</strong>: titles ending in <code>?</code> average 29.0 vs the 40.2 baseline — 28% below average</li>
+<li><strong>Numbers help slightly</strong>: titles containing a number average 45.4 vs 40.2 baseline</li>
+</ul>
+<p>Timing also matters: the peak posting slot in the dataset is <strong>Sunday 14:00 UTC</strong> (Sunday morning US time), consistent with US readers browsing over the weekend.</p>
 <div id="cell-8" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_timing_heatmap.png'</span>, <span class="st">'Median score by day × hour'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ Median score by day × hour
 </code></pre>
@@ -268,12 +295,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="finding-4-hn-score-inequality-rivals-wealth-inequality" class="level2">
 <h2 class="anchored" data-anchor-id="finding-4-hn-score-inequality-rivals-wealth-inequality">Finding 4 — HN score inequality rivals wealth inequality</h2>
-<p>The Gini coefficient of story scores is above 0.8 — comparable to national wealth inequality in the most unequal countries. The top 1% of stories capture more than 40% of all upvotes ever cast.</p>
+<p>The Gini coefficient of story scores is above 0.8 — comparable to national wealth inequality in the most unequal countries. The top 1% of stories capture 32.6% of all upvotes ever cast.</p>
 <div id="cell-10" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_lorenz.png'</span>, <span class="st">'Lorenz curve of HN story scores'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ Lorenz curve of HN story scores
 </code></pre>
@@ -301,14 +335,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="finding-6-ai-stories-score-2-higher-than-average-since-2023" class="level2">
-<h2 class="anchored" data-anchor-id="finding-6-ai-stories-score-2-higher-than-average-since-2023">Finding 6 — AI stories score 2× higher than average since 2023</h2>
-<p>Before 2020 there was no significant score premium for AI-related stories. By 2023–2024 the median AI story scores roughly double the non-AI baseline — meaning the topic itself is now a significant upvote signal, independent of quality.</p>
+<section id="finding-6-ai-content-now-dominates-the-viral-tier" class="level2">
+<h2 class="anchored" data-anchor-id="finding-6-ai-content-now-dominates-the-viral-tier">Finding 6 — AI content now dominates the viral tier</h2>
+<p>The median AI story doesn’t score higher than average — but that misses the real story. AI-related content (LLMs, ChatGPT, OpenAI, Anthropic, Copilot, Stable Diffusion, and more) accounted for <strong>~5% of all stories scoring above 100 in 2023</strong>, up from ~1% in 2020 — a <strong>5× increase</strong>. It’s not that AI stories are easier to score — it’s that the volume of breakout AI content has exploded, crowding out other topics at the top.</p>
 <div id="cell-14" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_ai_score_premium.png'</span>, <span class="st">'Score premium of AI stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ Score premium of AI stories
 </code></pre>
@@ -323,6 +364,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>show(<span class="st">'fig_power_authors.png'</span>, <span class="st">'Top submitters of viral stories'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_key_findings_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img" width="900"></p>
+</figure>
+</div>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>↑ Top submitters of viral stories
 </code></pre>
