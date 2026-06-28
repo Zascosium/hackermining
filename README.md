@@ -2,21 +2,21 @@
 
 > 20 years of Hacker News — a data investigation
 
-**Live site:** https://zascosium.github.io/hackermining *(after first deploy)*
+**Live site:** https://zascosium.github.io/hackermining
 
-Hacker News is the tech industry's water cooler. This project mines the full public dataset (35M+ items, 2006–2024) to find non-obvious patterns — in the style of David Kriesel's SpiegelMining and BahnMining.
+Hacker News is the tech industry's water cooler. This project mines the full public dataset — 5.5M stories and 42M comments, 2006 to present — to find non-obvious patterns in the style of David Kriesel's SpiegelMining and BahnMining.
 
 ---
 
 ## Key findings
 
-1. Technology life cycles are shockingly short — most go from hype peak to noise in under 4 years
-2. ChatGPT was a 10× discontinuity — the largest single-event spike in 18 years of data
-3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower
-4. HN score inequality rivals wealth inequality — Gini 0.845, top 1% capture 32.6% of all points
-5. GitHub replaced personal blogs as the default link target by 2018
-6. AI content now makes up **25–35% of all viral stories** (score > 100), up from under 5% in 2020
-7. ~50 power users drive a disproportionate share of all viral content
+1. **Technology hype cycles are shockingly short** — most go from peak to background noise in under 4 years (NFT: peak 2021, irrelevant by 2024)
+2. **ChatGPT was a 10× discontinuity** — the largest single-event spike in 18 years of data, dwarfing AlphaGo, GPT-3, and DALL-E combined
+3. **Weekday mornings (US time) outperform** — weekend and late-night UTC posts score measurably lower across all years
+4. **HN attention is extraordinarily unequal** — Gini coefficient 0.845, top 1% of stories capture 32.6% of all upvotes ever cast
+5. **GitHub replaced personal blogs** as the dominant link target by 2015, and has widened its lead every year since
+6. **AI content now dominates the viral tier** — 25–35% of all stories scoring above 100 since 2023, up from under 5% in 2020; not because AI stories score higher on average, but because the volume of breakout content has exploded
+7. **A small network of ~50 power users** drives a disproportionate share of front-page content — HN curation is less random than it appears
 
 ---
 
@@ -25,57 +25,59 @@ Hacker News is the tech industry's water cooler. This project mines the full pub
 ```
 hackermining/
 ├── notebooks/
-│   ├── 01_data_acquisition.ipynb   # BigQuery → local parquet
-│   ├── 02_hype_cycles.ipynb        # The headline heatmap
-│   ├── 03_front_page_anatomy.ipynb # What predicts a viral post
-│   ├── 04_domain_dominance.ipynb   # Who owns each era
-│   ├── 05_ai_discourse.ipynb       # AI/LLM timeline
-│   ├── 06_community_behavior.ipynb # Gini, power users, timing
-│   └── 07_key_findings.ipynb       # Summary chapter
+│   ├── 01_data_acquisition.ipynb   # BigQuery → local parquet (run once)
+│   ├── 02_hype_cycles.ipynb        # Technology hype cycle heatmap
+│   ├── 03_front_page_anatomy.ipynb # What actually predicts a viral post
+│   ├── 04_domain_dominance.ipynb   # Who owns each era of HN
+│   ├── 05_ai_discourse.ipynb       # AI/LLM timeline and viral share
+│   ├── 06_community_behavior.ipynb # Gini, power users, post types
+│   └── 07_key_findings.ipynb       # Summary with all headline charts
 ├── src/
 │   ├── loader.py   # BigQuery + DuckDB helpers
-│   ├── nlp.py      # Keyword tracking, sentiment, domain extraction
-│   └── viz.py      # Consistent chart style
-├── _quarto.yml     # Static site config
+│   ├── nlp.py      # Keyword tracking, VADER sentiment, domain extraction
+│   └── viz.py      # Consistent chart style across all notebooks
+├── _quarto.yml     # Quarto static site config
 └── index.qmd       # Landing page
 ```
 
 ---
 
-## Setup
+## Reproducing the analysis
 
-### Prerequisites
+### Option A — View only (no BigQuery needed)
 
-- **Python 3.11+**
-- **Google Cloud SDK** (required for BigQuery access)
-  ```bash
-  # macOS
-  brew install google-cloud-sdk
-  
-  # Other systems: https://cloud.google.com/sdk/docs/install
-  ```
-
----
-
-## Quick start
+The notebooks are saved with outputs. Clone the repo and build the site directly:
 
 ```bash
-# 1. Install Python dependencies
+pip install -e .
+quarto render
+quarto preview   # opens the site locally
+```
+
+### Option B — Re-run from scratch
+
+Requires a Google Cloud account with BigQuery API enabled (free tier covers this project).
+
+```bash
+# 1. Install dependencies
 pip install -e .
 
-# 2. Set up GCP access
+# 2. Authenticate with Google Cloud
+brew install google-cloud-sdk   # macOS; see cloud.google.com/sdk for others
 gcloud init
 gcloud auth application-default login
+
+# 3. Configure project
 cp .env.example .env
 # Set GCP_PROJECT_ID in .env
 
-# 3. Download data (one-time, ~10 min)
-jupyter execute notebooks/01_data_acquisition.ipynb
+# 4. Download data (one-time, ~10–15 min, uses ~10 GB BigQuery free quota)
+# Open notebook 01 in Jupyter and run all cells:
+jupyter lab notebooks/01_data_acquisition.ipynb
 
-# 4. Run any analysis notebook
-jupyter lab
+# 5. Run analysis notebooks 02–06 in Jupyter, then save with outputs
 
-# 5. Build & publish the site
+# 6. Build and publish
 quarto render
 quarto publish gh-pages
 ```
@@ -86,10 +88,10 @@ quarto publish gh-pages
 
 | Tool | Purpose |
 |---|---|
-| BigQuery | 35M+ item public HN dataset |
-| DuckDB | Fast SQL over local parquet |
-| pandas / polars | Data manipulation |
-| matplotlib / seaborn | Charts (Kriesel style) |
-| VADER | Title sentiment analysis |
-| Quarto | Notebooks → static site |
-| GitHub Pages | Hosting |
+| Google BigQuery | Source: 5.5M stories + 42M comments, 2006–present |
+| DuckDB | Fast SQL over local parquet — no database server needed |
+| pandas | Data manipulation and aggregation |
+| matplotlib / seaborn | Charts (static, publication-style) |
+| VADER | Title sentiment scoring |
+| Quarto | Converts notebooks to a static website |
+| GitHub Pages | Free hosting for the rendered site |
